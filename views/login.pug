@@ -1,0 +1,18 @@
+extends root 
+
+block content 
+  form(method='post' action='/users/login')
+    p
+      label(for='username') Username
+      input(id='username' name='username' type='input')
+    if error && error.username 
+      p #{error.username}
+    p 
+      label(for='password') Password
+      input(id='password' name='password' type='password')
+    if error && error.password 
+      p #{error.password}
+
+    if error && error.failed
+      p Invalid username or password
+    button(type='submit') Login

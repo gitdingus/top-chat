@@ -1,0 +1,25 @@
+extends root 
+
+block content 
+  form(method='post' action='/users/create-account')
+    p
+      label(for='username') Username
+      input(id='username' name='username' type='input' value=newUser ? newUser.username : '')
+      if error && error.username
+        p #{error.username}
+    p
+      label(for='email') Email
+      input(id='email' name='email' type='email' value=newUser ? newUser.email : '')
+      if error && error.email
+        p #{error.email}
+    p 
+      label(for='password') Password
+      input(id='password' name='password' type='password')
+      if error && error.password   
+        p #{error.password}
+    p 
+      label(for='confirm_password') Confirm Password
+      input(id='confirm_password' name='confirm_password' type='password')
+      if error && error.confirm_password 
+        p #{error.confirm_password}
+    button(type='submit') Create Account
