@@ -1,0 +1,54 @@
+doctype html 
+html(lang='en')
+  head 
+    title Chat App
+    meta(charset='utf-8')
+    link(rel='stylesheet' href='/styles/root.css')
+    script(src='/scripts/authentication.js' defer)
+  body
+    div(id='modals')
+      div(id='create-account-div')
+        div(class='toolbar')
+          button(class='exit') X 
+        form(method='post' action='/users/create-account')
+          p
+            label(for='username') Username
+            input(id='username' name='username' type='input')
+          p
+            label(for='email') Email
+            input(id='email' name='email' type='email')
+          p 
+            label(for='password') Password
+            input(id='password' name='password' type='password')
+          p 
+            label(for='confirm_password') Confirm Password
+            input(id='confirm_password' name='confirm_password' type='password')
+          button(type='submit') Create Account
+
+      div(id='login-div')
+        div(class='toolbar')
+          button(class='exit') X 
+        form(method='post' action='users/login')
+          p
+            label(for='username') Username
+            input(id='username' name='username' type='input')
+          p 
+            label(for='password') Password
+            input(id='password' name='password' type='password')
+          button(type='submit') Login 
+    header 
+      nav 
+        ul 
+          li: a(href='/') Home 
+          li: a(href='/users') Users 
+          li: a(href='/chat') Chat 
+      div(class='authentication')
+        if !user
+          ul 
+            li: button(id='create-account-btn') Create Account 
+            li: button(id='login-btn') Login 
+        else 
+          p Welcome #{user.username}
+          p: a(href='users/logout') Logout
+          
+    block content 
