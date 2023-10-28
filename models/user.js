@@ -34,6 +34,16 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
+  public: Boolean,
+});
+
+userSchema.virtual('birthdayInputValueFormat').get(function () {
+  if (!this.birthday) {
+    return '';
+  }
+  
+  const endIndex = this.birthday.toISOString().indexOf('T');
+  return this.birthday.toISOString().substring(0, endIndex);
 });
 
 module.exports = mongoose.model('User', userSchema);
