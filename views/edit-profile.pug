@@ -1,0 +1,38 @@
+extends root 
+
+mixin inputfield(id, fieldtype, text, initialValue)
+  p
+    label(for=id)= text 
+    input(id=id name=id type=fieldtype value=initialValue)
+
+
+mixin errormessage(field)
+  if error && error[field] && error[field].msg 
+    p= error[field].msg 
+
+
+block content 
+  if user 
+    h1 Edit Profile 
+    h2= user.username 
+    form(method='post' action='/users/me/edit')
+      fieldset 
+        legend Personal Information 
+        +inputfield('first_name', 'text', 'First Name', user.firstName || '')
+        +errormessage('first_name')
+        +inputfield('last_name', 'text', 'Last Name', user.lastName || '')
+        +errormessage('last_name')
+        +inputfield('email', 'email', 'Email', user.email || '')
+        +errormessage('email')
+        +inputfield('birthday', 'date', 'Birthday', user.birthdayInputValueFormat || '')
+        +errormessage('birthday')
+        lable(for='about') About
+        textarea(id='about' name='about') #{user.about || ''}
+        +errormessage('about')
+      fieldset 
+        legend Privacy 
+        label(for='public') Make profile public
+        input(id='public' name='public' type='checkbox' checked=user.public || false)
+      button(type='submit') Update profile
+  else 
+    p User not found

@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
-
-const { createAccount } = require('../db/user.js');
+const { body, validationResult } = require('express-validator');
+const { createAccount, updateUser } = require('../db/user.js');
 const User = require('../models/user.js');
 
 exports.get_create_account = (req, res, next) => {
@@ -35,6 +35,12 @@ exports.get_logout = (req, res, next) => {
     }
 
     res.redirect('/');
+  });
+};
+
+exports.get_edit_profile = (req, res, next) => {
+  res.render('edit-profile', {
+    user: req.user,
   });
 };
 
@@ -102,6 +108,60 @@ exports.post_create_account = [
   passport.authenticate('local', { 
     successRedirect: '/', 
   }),
+];
+
+exports.post_edit_profile = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  body('first_name')
+    .optional()
+    .escape(),
+  body('last_name')
+    .optional()
+    .escape(),
+  body('email')
+    .optional()
+    .isEmail()
+    .escape(),
+  body('birthday')
+    .optional()
+    .isISO8601(),
+  body('about')
+    .optional()
+    .escape(),
+  body('public')
+    .optional()
+    .customSanitizer((value) => {
+      if (value === 'on') {
+        return true;
+      }
+
+      return false;
+    }),
+  async (req, res, next) => {
+    const editedUser = new User({
+      _id: req.user._id,
+      firstName: req.body.first_name,
+      lastName: req.body.last_name,
+      email: req.body.email,
+      birthday: req.body.birthday,
+      about: req.body.about,
+      public: req.body.public,
+    });
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.render('edit-profile', {
+        user: editedUser,
+        error: errors.mapped(),
+      });
+    }
+
+    await updateUser(req.user, editedUser.toObject());
+    
+    return res.redirect('/users/me');
+  }
 ];
 
 exports.post_login = [
