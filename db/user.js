@@ -28,6 +28,15 @@ async function createAccount(email, username, password) {
   return newUser;
 }
 
+async function updateUser(user, updates) {
+  Object.keys(updates).forEach((key) => {
+    user[key] = updates[key];
+  });
+
+  return await user.save();
+}
+
 module.exports = {
   createAccount,
+  updateUser
 }
