@@ -1,7 +1,7 @@
 extends root 
 
 block content 
-  if user 
+  if user && profile 
     h1 Profile for #{profile.username}
     if profile.public
       img(src=profile.image || '/images/account.png')
@@ -11,4 +11,4 @@ block content
       p About: #{profile.about}
     p Created: #{profile.created.toLocaleDateString()}
   else 
-    p User not found
+    p Sign up to access this page.
