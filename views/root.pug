@@ -28,7 +28,7 @@ html(lang='en')
       div(id='login-div')
         div(class='toolbar')
           button(class='exit') X 
-        form(method='post' action='users/login')
+        form(method='post' action='/users/login')
           p
             label(for='username') Username
             input(id='username' name='username' type='input')
@@ -49,6 +49,6 @@ html(lang='en')
             li: button(id='login-btn') Login 
         else 
           p Welcome #{user.username}
-          p: a(href='users/logout') Logout
+          p: a(href='/users/logout') Logout
           
     block content 
