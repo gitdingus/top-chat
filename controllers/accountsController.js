@@ -77,14 +77,6 @@ exports.get_user = async (req, res, next) => {
 exports.post_create_account = [
   express.json(),
   express.urlencoded({ extended: false }),
-  body('username')
-    .escape(),
-  body('email')
-    .escape(),
-  body('password')
-    .escape(),
-  body('confirm_password')
-    .escape(),
   (req, res, next) => {
     const newUser = new User({
       email: req.body.email,
@@ -152,21 +144,17 @@ exports.post_edit_profile = [
   express.json(),
   express.urlencoded({ extended: false }),
   body('first_name')
-    .optional()
-    .escape(),
+    .optional(),
   body('last_name')
-    .optional()
-    .escape(),
+    .optional(),
   body('email')
     .optional()
-    .isEmail()
-    .escape(),
+    .isEmail(),
   body('birthday')
     .optional()
     .isISO8601(),
   body('about')
-    .optional()
-    .escape(),
+    .optional(),
   body('public')
     .optional()
     .customSanitizer((value) => {
@@ -205,8 +193,6 @@ exports.post_edit_profile = [
 exports.post_locate_users = [
   express.json(),
   express.urlencoded({ extended: false }),
-  body('search')
-    .escape(),
   async (req, res, next) => {
     const users = await locateUsers(req.body.search);
 
