@@ -44,6 +44,12 @@ exports.get_edit_profile = (req, res, next) => {
   });
 };
 
+exports.get_my_profile = (req, res, next) => {
+  res.render('user-profile', {
+    user: req.user,
+  });
+};
+
 exports.post_create_account = [
   express.json(),
   express.urlencoded({ extended: false }),
