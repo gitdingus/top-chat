@@ -1,0 +1,16 @@
+extends root 
+
+block content 
+  form(method='post' action='')
+    p
+      label(for='search') Search Users 
+      input(id='search' name='search' type='search' value=term || '')
+    button Search 
+
+  div.users 
+    if users
+      each user in users 
+        p: a(href=user.url) #{user.username}
+
+
+   

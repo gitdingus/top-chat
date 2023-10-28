@@ -28,6 +28,18 @@ async function createAccount(email, username, password) {
   return newUser;
 }
 
+async function findById(id) {
+  const user = await User.findById(id).exec();
+
+  return user;
+}
+
+async function findByUsername(username) {
+  const user = await User.findOne({ username }).exec();
+
+  return user;
+}
+
 async function updateUser(user, updates) {
   Object.keys(updates).forEach((key) => {
     user[key] = updates[key];
@@ -36,7 +48,16 @@ async function updateUser(user, updates) {
   return await user.save();
 }
 
+async function locateUsers(data) {
+  const users = await User.find({ $or: [{ username: data }, { email: data }]}).exec();
+
+  return users;
+}
+
 module.exports = {
   createAccount,
-  updateUser
+  findById,
+  findByUsername,
+  locateUsers,
+  updateUser,
 }

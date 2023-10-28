@@ -1,7 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
-const { createAccount, updateUser } = require('../db/user.js');
+
+const { 
+  createAccount,
+  findByUsername, 
+  locateUsers, 
+  updateUser 
+} = require('../db/user.js');
 const User = require('../models/user.js');
 
 exports.get_create_account = (req, res, next) => {
@@ -44,11 +50,29 @@ exports.get_edit_profile = (req, res, next) => {
   });
 };
 
+exports.get_locate_users = [
+  (req, res, next) => {
+    return res.render('locate-users', {
+      user: req.user,
+    });
+  }
+];
+
 exports.get_my_profile = (req, res, next) => {
   res.render('user-profile', {
     user: req.user,
+    profile: req.user,
   });
 };
+
+exports.get_user = async (req, res, next) => {
+  const profile = await findByUsername(req.params.username);
+
+  res.render('user-profile', {
+    user: req.user,
+    profile,
+  });
+}
 
 exports.post_create_account = [
   express.json(),
@@ -175,6 +199,22 @@ exports.post_edit_profile = [
     await updateUser(req.user, editedUser.toObject());
     
     return res.redirect('/users/me');
+  }
+];
+
+exports.post_locate_users = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  body('search')
+    .escape(),
+  async (req, res, next) => {
+    const users = await locateUsers(req.body.search);
+
+    return res.render('locate-users', {
+      term: req.body.search,
+      user: req.user,
+      users,
+    });
   }
 ];
 

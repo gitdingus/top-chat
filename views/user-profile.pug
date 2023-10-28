@@ -2,13 +2,13 @@ extends root
 
 block content 
   if user 
-    h1 Profile for #{user.username}
-    if user.public
-      img(src=user.image || '/images/account.png')
-      p Name: #{user.firstName || ''} #{user.lastName || ''}
-      p Email: #{user.email}
-      p Birthday: #{user.birthday || ''}
-      p About: #{user.about}
-    p Created: #{user.created.toLocaleDateString()}
+    h1 Profile for #{profile.username}
+    if profile.public
+      img(src=profile.image || '/images/account.png')
+      p Name: #{profile.firstName || ''} #{profile.lastName || ''}
+      p Email: #{profile.email}
+      p Birthday: #{profile.birthday || ''}
+      p About: #{profile.about}
+    p Created: #{profile.created.toLocaleDateString()}
   else 
     p User not found

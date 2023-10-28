@@ -46,4 +46,8 @@ userSchema.virtual('birthdayInputValueFormat').get(function () {
   return this.birthday.toISOString().substring(0, endIndex);
 });
 
+userSchema.virtual('url').get(function() {
+  return `/users/${this.username}`;
+});
+
 module.exports = mongoose.model('User', userSchema);
