@@ -47,6 +47,14 @@ exports.get_edit_profile = (req, res, next) => {
 exports.post_create_account = [
   express.json(),
   express.urlencoded({ extended: false }),
+  body('username')
+    .escape(),
+  body('email')
+    .escape(),
+  body('password')
+    .escape(),
+  body('confirm_password')
+    .escape(),
   (req, res, next) => {
     const newUser = new User({
       email: req.body.email,
