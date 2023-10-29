@@ -1,5 +1,11 @@
 extends root 
 
+mixin friendForms(id, btnText)
+  form(id=id)
+    input(type='hidden' name='friendId' value=profile._id)
+    button(type=submit)= btnText
+
+
 block scripts 
   script(src='/scripts/friend_request.js' defer)
 
@@ -27,25 +33,15 @@ block content
 
       if friendStatus == 'sent'
         p Friend request sent 
-        form(id='friendship-reject')
-          input(type='hidden' name='friendId' value=profile._id)
-          button(type='submit' name='action' value='reject') Cancel Friend Request
+        +friendForms('friendship-reject', 'Cancel Friend Request')
       else if friendStatus == 'recieved'
-        form(id='friendship-accept')
-          input(type='hidden' name='friendId' value=profile._id)
-          button(type='submit') Accept Friend Request 
-        form(id='friendship-reject')
-          input(type='hidden' name='friendId' value=profile._id)
-          button(type='submit' name='action' value='reject') Reject Friend Request
+        +friendForms('friendship-accept', 'Accept Friend Request')
+        +friendForms('friendship-reject', 'Reject Friend Request')
       else if friendStatus == 'friend'
         p You are friends with this user
-        form(id='friendship-reject')
-          input(type='hidden' name='friendId' value=profile._id)
-          button(type='submit' name='action' value='reject') Remove Friend
+        +friendForms('friendship-reject', 'Remove Friend')
       else 
-        form(id='friend-request')
-          input(type='hidden' name='friendId' value=profile._id)
-          button(type='submit') Add Friend
+        +friendForms('friend-request', 'Add Friend')
 
   else 
     p Sign up to access this page.
