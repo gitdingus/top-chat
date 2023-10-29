@@ -1,0 +1,12 @@
+div.friends 
+  if user.friends
+    each friend in friends 
+      div.friend 
+        p.username= friend.username 
+        if friend.status == 'sent'
+          p.status = 'Request sent'
+        else if friend.status == 'recieved'
+          p.status = 'Request recieved'
+          
+  else 
+    p Add friends to start chatting!
