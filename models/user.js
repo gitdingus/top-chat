@@ -31,8 +31,14 @@ const userSchema = new Schema({
     maxLength: 1000,
   },
   friends: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+    friend: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    status: {
+      type: String,
+      enum: ['friend', 'sent', 'recieved'],
+    },
   }],
   public: Boolean,
 });
