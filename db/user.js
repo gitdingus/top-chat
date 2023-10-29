@@ -83,7 +83,8 @@ async function addFriend(user, friendId) {
     .then(() => {
       result = 'success';
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       result = 'failed';
     });
 

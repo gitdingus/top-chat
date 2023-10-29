@@ -83,7 +83,6 @@ exports.post_accept_friend = [
   async (req, res, next) => {
     const result = await acceptFriend(req.user, req.body.friendId);
 
-    console.log(result);
     res.status(200).json({ msg: result });
   }
 ];
@@ -264,7 +263,6 @@ exports.post_reject_friend = [
   async (req, res, next) => {
     const result = await rejectFriend(req.user, req.body.friendId);
 
-    console.log(result);
     res.status(200).json({ msg: result });
   }
 ];
