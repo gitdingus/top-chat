@@ -27,8 +27,21 @@ block content
 
       if friendStatus == 'sent'
         p Friend request sent 
+        form(id='friendship-reject')
+          input(type='hidden' name='friendId' value=profile._id)
+          button(type='submit' name='action' value='reject') Cancel Friend Request
       else if friendStatus == 'recieved'
-        p Accept Friend Request
+        form(id='friendship-accept')
+          input(type='hidden' name='friendId' value=profile._id)
+          button(type='submit') Accept Friend Request 
+        form(id='friendship-reject')
+          input(type='hidden' name='friendId' value=profile._id)
+          button(type='submit' name='action' value='reject') Reject Friend Request
+      else if friendStatus == 'friend'
+        p You are friends with this user
+        form(id='friendship-reject')
+          input(type='hidden' name='friendId' value=profile._id)
+          button(type='submit' name='action' value='reject') Remove Friend
       else 
         form(id='friend-request')
           input(type='hidden' name='friendId' value=profile._id)

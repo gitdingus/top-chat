@@ -2,8 +2,52 @@ const mongoose = require('mongoose');
 const User = require('../models/user.js');
 const { generateSaltHash } = require('../utils/passwordUtils.js');
 
-async function addFriend(user, friendId) {
+async function acceptFriend(user, friendId) {
+  let result;
+
+  const friendExists = user.friends.some((entry) => {
+    if (entry.friend.toString() === friendId) {
+      return true;
+    }
+  });
+
+  if (!friendExists) {
+    result = 'not found';
+    return result;
+  }
+
   const session = await mongoose.startSession();
+
+  await session.withTransaction(async (s) => {
+    const friend = await User.findById(friendId).session(s).exec();
+
+    const friendEntry1 = user.friends.find((entry) => {
+      return entry.friend._id.toString() === friendId;
+    });
+
+    const friendEntry2 = friend.friends.find((entry) => {
+      return entry.friend._id.equals(user._id) === true;
+    });
+
+    friendEntry1.status = 'friend';
+    friendEntry2.status = 'friend';
+
+    await user.save({session: s});
+    await friend.save({session: s});
+  })
+    .then(() => session.endSession())
+    .then(() => {
+      result = 'success';
+    })
+    .catch((err) => {
+      console.log(err);
+      result = 'failed';
+    });
+
+  return result;
+}
+
+async function addFriend(user, friendId) {
   let result;
 
   const friendExists = user.friends.some((entry) => {
@@ -16,6 +60,8 @@ async function addFriend(user, friendId) {
     result = 'exists';
     return result; 
   }
+
+  const session = await mongoose.startSession();
 
   await session.withTransaction(async (s) => {
     const friend = await User.findById(friendId).session(s).exec();
@@ -33,8 +79,8 @@ async function addFriend(user, friendId) {
     await user.save({ session: s });
     await friend.save({ session: s });
   })
+    .then(() => session.endSession())
     .then(() => {
-      session.endSession();
       result = 'success';
     })
     .catch(() => {
@@ -89,6 +135,55 @@ async function locateUsers(data) {
   return users;
 }
 
+async function rejectFriend(user, friendId) {
+  let result;
+
+  const friendExists = user.friends.some((entry) => {
+    if (entry.friend.toString() === friendId) {
+      return true;
+    }
+  });
+
+  if (!friendExists) {
+    result = 'not found';
+    return result;
+  }
+
+  const session = await mongoose.startSession();
+
+  await session.withTransaction(async (s) => {
+    const friend = await User.findById(friendId).session(s).exec();
+
+    const friendEntry1Index = user.friends.findIndex((entry) => {
+      if (entry.friend.equals(friend._id)) {
+        return true;
+      }
+    });
+
+    const friendEntry2Index = friend.friends.findIndex((entry) => {
+      if (entry.friend.equals(user._id)) {
+        return true;
+      }
+    });
+
+    user.friends.splice(friendEntry1Index, 1);
+    friend.friends.splice(friendEntry2Index, 1);
+
+    await user.save();
+    await friend.save();
+  })
+    .then(() => session.endSession())
+    .then(() => {
+      result = 'success';
+    })
+    .catch((err) => {
+      console.log(err);
+      result = 'failed';
+    });
+
+  return result;
+}
+
 async function updateUser(user, updates) {
   Object.keys(updates).forEach((key) => {
     user[key] = updates[key];
@@ -98,10 +193,12 @@ async function updateUser(user, updates) {
 }
 
 module.exports = {
+  acceptFriend,
   addFriend,
   createAccount,
   findById,
   findByUsername,
   locateUsers,
+  rejectFriend,
   updateUser,
 }

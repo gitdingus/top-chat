@@ -3,11 +3,13 @@ const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 
 const { 
+  acceptFriend,
   addFriend,
   createAccount,
   findByUsername, 
-  locateUsers, 
-  updateUser 
+  locateUsers,
+  rejectFriend,
+  updateUser,
 } = require('../db/user.js');
 const User = require('../models/user.js');
 
@@ -74,6 +76,17 @@ exports.get_user = async (req, res, next) => {
     profile,
   });
 }
+
+exports.post_accept_friend = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  async (req, res, next) => {
+    const result = await acceptFriend(req.user, req.body.friendId);
+
+    console.log(result);
+    res.status(200).json({ msg: result });
+  }
+];
 
 exports.post_add_friend = [
   express.json(),
@@ -243,4 +256,15 @@ exports.post_login = [
     failureRedirect: '/users/login',
     failureMessage: 'post_login failed',
   }),
+];
+
+exports.post_reject_friend = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  async (req, res, next) => {
+    const result = await rejectFriend(req.user, req.body.friendId);
+
+    console.log(result);
+    res.status(200).json({ msg: result });
+  }
 ];
