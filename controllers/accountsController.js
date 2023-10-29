@@ -3,6 +3,7 @@ const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 
 const { 
+  addFriend,
   createAccount,
   findByUsername, 
   locateUsers, 
@@ -73,6 +74,16 @@ exports.get_user = async (req, res, next) => {
     profile,
   });
 }
+
+exports.post_add_friend = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  async (req, res, next) => {
+    const result = await addFriend(req.user, req.body.friendId);
+
+    res.status(200).json({ msg: result });
+  },
+];
 
 exports.post_create_account = [
   express.json(),

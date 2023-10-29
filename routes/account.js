@@ -15,6 +15,7 @@ accountRouter.get('/logout', accountsController.get_logout);
 accountRouter.get('/me', accountsController.get_my_profile);
 accountRouter.get('/me/edit', accountsController.get_edit_profile);
 accountRouter.post('/me/edit', accountsController.post_edit_profile);
+accountRouter.post('/me/addfriend', accountsController.post_add_friend);
 
 accountRouter.get('/:username', accountsController.get_user);
 
