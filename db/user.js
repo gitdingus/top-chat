@@ -1,5 +1,48 @@
+const mongoose = require('mongoose');
 const User = require('../models/user.js');
 const { generateSaltHash } = require('../utils/passwordUtils.js');
+
+async function addFriend(user, friendId) {
+  const session = await mongoose.startSession();
+  let result;
+
+  const friendExists = user.friends.some((entry) => {
+    if (entry.friend.toString() === friendId) {
+      return true;
+    }
+  });
+
+  if (friendExists) {
+    result = 'exists';
+    return result; 
+  }
+
+  await session.withTransaction(async (s) => {
+    const friend = await User.findById(friendId).session(s).exec();
+  
+    user.friends.push({
+      friend: friendId,
+      status: 'sent',
+    });
+
+    friend.friends.push({
+      friend: user._id,
+      status: 'recieved',
+    });
+
+    await user.save({ session: s });
+    await friend.save({ session: s });
+  })
+    .then(() => {
+      session.endSession();
+      result = 'success';
+    })
+    .catch(() => {
+      result = 'failed';
+    });
+
+  return result;
+}
 
 async function createAccount(email, username, password) {
   const user = await User.findOne({ $or: [{ email: email }, { username: username }] }).exec();
@@ -40,6 +83,12 @@ async function findByUsername(username) {
   return user;
 }
 
+async function locateUsers(data) {
+  const users = await User.find({ $or: [{ username: data }, { email: data }]}).exec();
+
+  return users;
+}
+
 async function updateUser(user, updates) {
   Object.keys(updates).forEach((key) => {
     user[key] = updates[key];
@@ -48,13 +97,8 @@ async function updateUser(user, updates) {
   return await user.save();
 }
 
-async function locateUsers(data) {
-  const users = await User.find({ $or: [{ username: data }, { email: data }]}).exec();
-
-  return users;
-}
-
 module.exports = {
+  addFriend,
   createAccount,
   findById,
   findByUsername,
