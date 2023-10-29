@@ -1,5 +1,9 @@
 extends root 
 
+block scripts 
+  script(src='/scripts/friend_request.js' defer)
+
+
 block content 
   if user && profile 
     h1 Profile for #{profile.username}
@@ -10,5 +14,25 @@ block content
       p Birthday: #{profile.birthday || ''}
       p About: #{profile.about}
     p Created: #{profile.created.toLocaleDateString()}
+    div(id='friend-status')
+      - 
+        let friendStatus = 'not found';
+
+        const search = user.friends.find((entry) => {
+          if (entry.friend.equals(profile._id)) {
+            friendStatus = entry.status;
+            return true;
+          }
+        });
+
+      if friendStatus == 'sent'
+        p Friend request sent 
+      else if friendStatus == 'recieved'
+        p Accept Friend Request
+      else 
+        form(id='friend-request')
+          input(type='hidden' name='friendId' value=profile._id)
+          button(type='submit') Add Friend
+
   else 
     p Sign up to access this page.
