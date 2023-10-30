@@ -15,6 +15,9 @@ function configurePassport(passport) {
       return cb(null, false, { message: 'Incorrect username or password' });
     }
 
+    user.online = true;
+    await user.save();
+    
     return cb(null, user);
   }));
 
