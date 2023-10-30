@@ -1,12 +1,16 @@
 div.friends 
-  if user.friends
-    each friend in friends 
+  if user.friends.length 
+    p Friends #{user.friends.length}
+    each entry in user.friends 
       div.friend 
-        p.username= friend.username 
-        if friend.status == 'sent'
-          p.status = 'Request sent'
-        else if friend.status == 'recieved'
-          p.status = 'Request recieved'
+        p.username= entry.friend.username 
+          if entry.status == 'sent'
+            span.friend-status Request sent
+          else if entry.status == 'recieved'
+            span.friend-status Request recieved
+
+          if entry.status == 'friend' && entry.friend.showOnlineStatus
+            span(class=`online-status ${entry.friend.online ? 'online' : 'offline'}`)= entry.friend.online ? 'Online' : 'Offline'
           
   else 
     p Add friends to start chatting!
