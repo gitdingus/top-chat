@@ -7,6 +7,7 @@ const {
   addFriend,
   createAccount,
   findByUsername, 
+  getFriends,
   locateUsers,
   rejectFriend,
   updateUser,
@@ -43,6 +44,15 @@ exports.get_edit_profile = (req, res, next) => {
   });
 };
 
+exports.get_friends = [
+  async (req, res, next) => {
+    await getFriends(req.user);
+    
+    res.render('friends', {
+      user: req.user,
+    });
+  }
+];
 exports.get_locate_users = [
   (req, res, next) => {
     return res.render('locate-users', {
