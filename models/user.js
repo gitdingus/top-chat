@@ -41,6 +41,8 @@ const userSchema = new Schema({
     },
   }],
   public: Boolean,
+  online: Boolean,
+  showOnlineStatus: Boolean,
 });
 
 userSchema.virtual('birthdayInputValueFormat').get(function () {
