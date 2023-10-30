@@ -199,6 +199,9 @@ exports.post_edit_profile = [
   async (req, res, next) => {
     const editedUser = new User({
       _id: req.user._id,
+      // mongoose implicitly sets arrays to []
+      // add req.user.friends to avoid deletion of friends list
+      friends: req.user.friends,
       firstName: req.body.first_name,
       lastName: req.body.last_name,
       email: req.body.email,
