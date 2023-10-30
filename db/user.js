@@ -130,6 +130,13 @@ async function findByUsername(username) {
   return user;
 }
 
+async function getFriends(user) {
+  await User.populate(user.friends, {
+    path: 'friend',
+    select: 'username url online showOnlineStatus',
+  });
+}
+
 async function locateUsers(data) {
   const users = await User.find({ $or: [{ username: data }, { email: data }]}).exec();
 
@@ -199,6 +206,7 @@ module.exports = {
   createAccount,
   findById,
   findByUsername,
+  getFriends,
   locateUsers,
   rejectFriend,
   updateUser,
