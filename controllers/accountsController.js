@@ -37,16 +37,6 @@ exports.get_login = (req, res, next) => {
   });
 };
 
-exports.get_logout = (req, res, next) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    res.redirect('/');
-  });
-};
-
 exports.get_edit_profile = (req, res, next) => {
   res.render('edit-profile', {
     user: req.user,
@@ -266,6 +256,19 @@ exports.post_login = [
     failureMessage: 'post_login failed',
   }),
 ];
+
+exports.post_logout = async (req, res, next) => {
+  // set online status to false on logout
+  await updateUser(req.user, { online: false });
+
+  req.logout(async function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.redirect('/');
+  });
+};
 
 exports.post_reject_friend = [
   express.json(),
