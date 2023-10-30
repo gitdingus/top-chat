@@ -3,7 +3,7 @@ extends root
 mixin friendForms(id, btnText)
   form(id=id)
     input(type='hidden' name='friendId' value=profile._id)
-    button(type=submit)= btnText
+    button(type='submit')= btnText
 
 
 block scripts 
@@ -31,17 +31,17 @@ block content
           }
         });
 
-      if friendStatus == 'sent'
-        p Friend request sent 
-        +friendForms('friendship-reject', 'Cancel Friend Request')
-      else if friendStatus == 'recieved'
-        +friendForms('friendship-accept', 'Accept Friend Request')
-        +friendForms('friendship-reject', 'Reject Friend Request')
-      else if friendStatus == 'friend'
-        p You are friends with this user
-        +friendForms('friendship-reject', 'Remove Friend')
-      else 
-        +friendForms('friend-request', 'Add Friend')
-
+      if user._id.toString() != profile._id.toString()
+        if friendStatus == 'sent'
+          p Friend request sent 
+          +friendForms('friendship-reject', 'Cancel Friend Request')
+        else if friendStatus == 'recieved'
+          +friendForms('friendship-accept', 'Accept Friend Request')
+          +friendForms('friendship-reject', 'Reject Friend Request')
+        else if friendStatus == 'friend'
+          p You are friends with this user
+          +friendForms('friendship-reject', 'Remove Friend')
+        else 
+          +friendForms('friend-request', 'Add Friend')  
   else 
     p Sign up to access this page.
