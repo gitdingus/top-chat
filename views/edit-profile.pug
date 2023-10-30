@@ -30,9 +30,13 @@ block content
         textarea(id='about' name='about') #{user.about || ''}
         +errormessage('about')
       fieldset 
-        legend Privacy 
-        label(for='public') Make profile public
-        input(id='public' name='public' type='checkbox' checked=user.public || false)
+        legend Privacy
+        p
+          label(for='public') Make profile public
+          input(id='public' name='public' type='checkbox' checked=user.public || false)
+        p
+          label(for='show_online_status') Show online status 
+          input(id='show_online_status' name='show_online_status' type='checkbox' checked=user.showOnlineStatus || false)
       button(type='submit') Update profile
   else 
     p User not found
