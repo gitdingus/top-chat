@@ -43,6 +43,8 @@ html(lang='en')
           li: a(href='/') Home 
           li: a(href='/users') Users 
           li: a(href='/chat') Chat 
+          if user 
+            li: a(href='/users/friends') Friends
       div(class='authentication')
         if !user
           ul 
