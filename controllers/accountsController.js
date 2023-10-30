@@ -187,6 +187,15 @@ exports.post_edit_profile = [
 
       return false;
     }),
+  body('show_online_status')
+    .optional()
+    .customSanitizer((value) => {
+      if (value === 'on') {
+        return true;
+      }
+
+      return false;
+    }),
   async (req, res, next) => {
     const editedUser = new User({
       _id: req.user._id,
@@ -195,7 +204,8 @@ exports.post_edit_profile = [
       email: req.body.email,
       birthday: req.body.birthday,
       about: req.body.about,
-      public: req.body.public,
+      public: req.body.public || false,
+      showOnlineStatus: req.body.show_online_status || false,
     });
 
     const errors = validationResult(req);
