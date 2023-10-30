@@ -13,6 +13,8 @@ block scripts
 block content 
   if user && profile 
     h1 Profile for #{profile.username}
+      - let displayOnline = profile.public && profile.showOnlineStatus && profile.online
+      div.onlinestatus(class=displayOnline ? 'online' : 'offline')
     if profile.public
       img(src=profile.image || '/images/account.png')
       p Name: #{profile.firstName || ''} #{profile.lastName || ''}
