@@ -10,7 +10,7 @@ accountRouter.post('/login', accountsController.post_login);
 
 accountRouter.get('/create-account', accountsController.get_create_account);
 accountRouter.get('/login', accountsController.get_login);
-accountRouter.get('/logout', accountsController.get_logout);
+accountRouter.post('/logout', accountsController.post_logout);
 
 accountRouter.get('/me', accountsController.get_my_profile);
 accountRouter.get('/me/edit', accountsController.get_edit_profile);

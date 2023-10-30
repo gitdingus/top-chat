@@ -50,6 +50,7 @@ html(lang='en')
             li: button(id='login-btn') Login 
         else 
           p Welcome #{user.username}
-          p: a(href='/users/logout') Logout
+          form(method='post' action='/users/logout')
+            button(type='submit') Logout
           
     block content 
