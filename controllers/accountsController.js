@@ -171,10 +171,10 @@ exports.post_edit_profile = [
   body('last_name')
     .optional(),
   body('email')
-    .optional()
+    .optional({ values: 'falsy' })
     .isEmail(),
   body('birthday')
-    .optional()
+    .optional({ values: 'falsy' })
     .isISO8601(),
   body('about')
     .optional(),
