@@ -1,4 +1,7 @@
 extends root 
 
 block content 
-  include includes/friend-list.pug
+  if !user  
+    p Sign up to start chatting! 
+  else
+    include includes/friend-list.pug
