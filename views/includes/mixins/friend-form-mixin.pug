@@ -1,0 +1,4 @@
+mixin friendForms(id, btnText, friendId)
+  form(id=id)
+    input(type='hidden' name='friendId' value=friendId)
+    button(type='submit')= btnText
