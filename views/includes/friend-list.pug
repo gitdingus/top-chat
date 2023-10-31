@@ -1,16 +1,29 @@
+include ./mixins/friend-form-mixin
+
+block scripts 
+  script(src='/scripts/friend_request.js' defer)
+
 div.friends 
   if user.friends.length 
     p Friends #{user.friends.length}
     each entry in user.friends 
       div.friend 
         p.username= entry.friend.username 
-          if entry.status == 'sent'
-            span.friend-status Request sent
-          else if entry.status == 'recieved'
-            span.friend-status Request recieved
-
           if entry.status == 'friend' && entry.friend.showOnlineStatus
             span(class=`online-status ${entry.friend.online ? 'online' : 'offline'}`)= entry.friend.online ? 'Online' : 'Offline'
           
+          if entry.status == 'sent'
+            span.friend-status friendship request pending 
+            div 
+              +friendForms('friendship-reject', 'Cancel Friend Request', entry.friend._id)
+          else if entry.status == 'recieved'
+            span.friend-status requested to be your friend 
+            div 
+              +friendForms('friendship-accept', 'Accept Friend Request', entry.friend._id)
+            div 
+              +friendForms('friendship-reject', 'Reject Friend Request', entry.friend._id)
+          else if entry.status == 'friend'
+            div 
+              +friendForms('friendship-reject', 'Remove Friend', entry.friend._id)
   else 
     p Add friends to start chatting!
