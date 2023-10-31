@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../models/user.js');
+const { createChat } = require('../db/chat.js');
 const { generateSaltHash } = require('../utils/passwordUtils.js');
 
 async function acceptFriend(user, friendId) {
@@ -20,6 +21,7 @@ async function acceptFriend(user, friendId) {
 
   await session.withTransaction(async (s) => {
     const friend = await User.findById(friendId).session(s).exec();
+    const chat = await createChat('private', [user._id, friend._id]);
 
     const friendEntry1 = user.friends.find((entry) => {
       return entry.friend._id.toString() === friendId;
@@ -30,7 +32,9 @@ async function acceptFriend(user, friendId) {
     });
 
     friendEntry1.status = 'friend';
+    friendEntry1.chat = chat;
     friendEntry2.status = 'friend';
+    friendEntry2.chat = chat;
 
     await user.save({session: s});
     await friend.save({session: s});
