@@ -39,6 +39,10 @@ const userSchema = new Schema({
       type: String,
       enum: ['friend', 'sent', 'recieved'],
     },
+    chat: {
+      type: Schema.Types.ObjectId,
+      ref: 'Chat',
+    },
   }],
   public: Boolean,
   online: Boolean,
