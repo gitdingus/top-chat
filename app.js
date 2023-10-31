@@ -7,6 +7,7 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
+const morgan = require('morgan');
 const passport = require('passport');
 
 const accountsController = require('./routes/account.js');
@@ -46,6 +47,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.get('/', (req, res, next) => {
   res.render('index', { user: req.user });
 });
