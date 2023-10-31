@@ -21,7 +21,7 @@ async function acceptFriend(user, friendId) {
 
   await session.withTransaction(async (s) => {
     const friend = await User.findById(friendId).session(s).exec();
-    const chat = await createChat('private', [user._id, friend._id]);
+    const chat = await createChat('private-message', [user._id, friend._id]);
 
     const friendEntry1 = user.friends.find((entry) => {
       return entry.friend._id.toString() === friendId;
