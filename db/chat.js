@@ -21,6 +21,11 @@ async function createChat(type, userIds) {
   return await chat.save();
 }
 
+async function getChat(chatId) {
+  const chat = await Chat.findById(chatId).exec();
+  return chat;
+}
+
 async function removeUserFromChat(chatId, userId) {
   const [ chat, user ] = await Promise.all([
     Chat.findById(chatId).exec(),
@@ -42,5 +47,6 @@ async function removeUserFromChat(chatId, userId) {
 module.exports = {
   addUserToChat,
   createChat,
+  getChat,
   removeUserFromChat,
 }
