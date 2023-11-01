@@ -1,0 +1,15 @@
+extends root 
+
+block scripts 
+  script(src='/scripts/chat.js' defer)
+
+block content 
+  if !user
+    p Sign up to start chatting! 
+  else 
+    p Friends 
+    ul 
+      each entry in user.friends 
+        if entry.status == 'friend'
+          li 
+            p: a(href=`/chat/${entry.chat}`)= entry.friend.username
