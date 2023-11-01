@@ -5,14 +5,19 @@ if (process.env.NODE_ENV === 'development') {
 // Installed dependencies
 const express = require('express');
 const session = require('express-session');
+const expressWs = require('express-ws');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const morgan = require('morgan');
 const passport = require('passport');
 
-const accountsController = require('./routes/account.js');
 const configurePassport = require('./utils/configurePassport.js');
+
 const app = express();
+const wsInstance = expressWs(app);
+
+const accountsRouter = require('./routes/account.js');
+const chatRouter = require('./routes/chats.js');
 
 app.use(express.static('public'));
 app.set('view engine', 'pug');
@@ -54,6 +59,7 @@ app.get('/', (req, res, next) => {
   res.render('index', { user: req.user });
 });
 
-app.use('/users', accountsController);
+app.use('/chat', chatRouter);
+app.use('/users', accountsRouter);
 
 app.listen(process.env.PORT);
