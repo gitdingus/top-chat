@@ -62,4 +62,10 @@ app.get('/', (req, res, next) => {
 app.use('/chat', chatRouter);
 app.use('/users', accountsRouter);
 
+app.use((err, req, res, next) => {
+  res.render('error', {
+    user: req.user,
+  });
+});
+
 app.listen(process.env.PORT);

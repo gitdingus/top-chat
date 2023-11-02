@@ -1,3 +1,4 @@
+const asyncHandler = require('express-async-handler');
 const { getFriends } = require('../db/user.js');
 const { getChat } = require('../db/chat.js');
 const { createMessage, getMessages, populate } = require('../db/message.js');
@@ -5,17 +6,17 @@ const { createMessage, getMessages, populate } = require('../db/message.js');
 const clients = {};
 
 exports.get_chat_index = [
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     await getFriends(req.user);
 
     res.render('chat', {
       user: req.user,
     });
-  },
+  }),
 ];
 
 exports.get_chat = [
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const [ populateFriendsVoid, chat, messages ] = await Promise.all([
       getFriends(req.user),
       getChat(req.params.chatId),
@@ -27,7 +28,7 @@ exports.get_chat = [
       chat,
       messages,
     });
-  }
+  })
 ];
 
 exports.ws_chat_visited = function (ws, req) {

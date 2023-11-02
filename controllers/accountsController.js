@@ -1,3 +1,4 @@
+const asyncHandler = require('express-async-handler');
 const express = require('express');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
@@ -45,13 +46,13 @@ exports.get_edit_profile = (req, res, next) => {
 };
 
 exports.get_friends = [
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     await getFriends(req.user);
     
     res.render('friends', {
       user: req.user,
     });
-  }
+  }),
 ];
 exports.get_locate_users = [
   (req, res, next) => {
@@ -68,33 +69,35 @@ exports.get_my_profile = (req, res, next) => {
   });
 };
 
-exports.get_user = async (req, res, next) => {
-  const profile = await findByUsername(req.params.username);
-
-  res.render('user-profile', {
-    user: req.user,
-    profile,
-  });
-}
+exports.get_user = [
+  asyncHandler(async (req, res, next) => {
+    const profile = await findByUsername(req.params.username);
+  
+    res.render('user-profile', {
+      user: req.user,
+      profile,
+    });
+  }),
+]
 
 exports.post_accept_friend = [
   express.json(),
   express.urlencoded({ extended: false }),
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const result = await acceptFriend(req.user, req.body.friendId);
 
     res.status(200).json({ msg: result });
-  }
+  }),
 ];
 
 exports.post_add_friend = [
   express.json(),
   express.urlencoded({ extended: false }),
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const result = await addFriend(req.user, req.body.friendId);
 
     res.status(200).json({ msg: result });
-  },
+  }),
 ];
 
 exports.post_create_account = [
@@ -196,7 +199,7 @@ exports.post_edit_profile = [
 
       return false;
     }),
-  async (req, res, next) => {
+  asyncHandler (async (req, res, next) => {
     const editedUser = new User({
       _id: req.user._id,
       // mongoose implicitly sets arrays to []
@@ -223,13 +226,13 @@ exports.post_edit_profile = [
     await updateUser(req.user, editedUser.toObject());
     
     return res.redirect('/users/me');
-  }
+  }),
 ];
 
 exports.post_locate_users = [
   express.json(),
   express.urlencoded({ extended: false }),
-  async (req, res, next) => {
+  asyncHandler (async (req, res, next) => {
     const users = await locateUsers(req.body.search);
 
     return res.render('locate-users', {
@@ -237,7 +240,7 @@ exports.post_locate_users = [
       user: req.user,
       users,
     });
-  }
+  }),
 ];
 
 exports.post_login = [
@@ -270,25 +273,27 @@ exports.post_login = [
   }),
 ];
 
-exports.post_logout = async (req, res, next) => {
-  // set online status to false on logout
-  await updateUser(req.user, { online: false });
-
-  req.logout(async function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    res.redirect('/');
-  });
-};
+exports.post_logout = [
+  asyncHandler (async (req, res, next) => {
+    // set online status to false on logout
+    await updateUser(req.user, { online: false });
+  
+    req.logout(async function (err) {
+      if (err) {
+        return next(err);
+      }
+  
+      res.redirect('/');
+    });
+  }),
+];
 
 exports.post_reject_friend = [
   express.json(),
   express.urlencoded({ extended: false }),
-  async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     const result = await rejectFriend(req.user, req.body.friendId);
 
     res.status(200).json({ msg: result });
-  }
+  }),
 ];
