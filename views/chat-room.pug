@@ -1,5 +1,7 @@
 extends root 
 
+block styles 
+  link(rel='stylesheet' href='/styles/chat-room.css')
 block scripts 
   script(src='/scripts/chat.js' defer)
 
@@ -8,9 +10,17 @@ block content
     p Sign up to start chatting! 
   else 
     p Hello #{user.username}, type a message!
-    div(id='messsages')
+    div(id='messages')
+      if messages.length > 0
+        - messages.reverse() 
+        each message in messages 
+          div(class='message' data-messageid=message._id)
+            p 
+              span #{message.author.username}: 
+              if message.type == 'text'
+                span= message.data
     form(id='message-form')
       input(type='hidden' id='chat_id' name='chat_id' value=chat._id)
       input(type='hidden' id='user_id' name='user_id' value=user._id)
-      input(type="text" id="message_input" name='message_input')
+      input(type="text" id="message_input" name='message_input' autocomplete='off')
       button(id='send-message') Send Message
