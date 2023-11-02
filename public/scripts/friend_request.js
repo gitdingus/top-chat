@@ -1,18 +1,23 @@
-const friendForms = document.querySelector('#friend-forms');
-const friendRequestForm = document.querySelector('#friend-request');
-const friendshipAcceptForm = document.querySelector('#friendship-accept');
-const friendshipRejectForm = document.querySelector('#friendship-reject');
+const friendRequestForm = document.querySelectorAll('.friend-request');
+const friendshipAcceptForm = document.querySelectorAll('.friendship-accept');
+const friendshipRejectForm = document.querySelectorAll('.friendship-reject');
 
-if (friendRequestForm !== null) {
-  friendRequestForm.addEventListener('submit', addFriend);
+if (friendRequestForm.length > 0) {
+  friendRequestForm.forEach((form) => {
+    form.addEventListener('submit', addFriend)
+  });
 }
 
-if (friendshipAcceptForm !== null) {
-  friendshipAcceptForm.addEventListener('submit', acceptFriend);
+if (friendshipAcceptForm.length > 0) {
+  friendshipAcceptForm.forEach((form) => {
+    form.addEventListener('submit', acceptFriend)
+  });
 }
 
-if (friendshipRejectForm !== null) {
-  friendshipRejectForm.addEventListener('submit', removeFriend);
+if (friendshipRejectForm > 0) {
+  friendshipRejectForm.forEach((form) => {
+    form.addEventListener('submit', removeFriend)
+  });
 }
 
 function acceptFriend(e) {
