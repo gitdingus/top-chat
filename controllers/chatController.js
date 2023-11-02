@@ -1,5 +1,7 @@
 const { getFriends } = require('../db/user.js');
 const { getChat } = require('../db/chat.js');
+const { createMessage, getMessages, populate } = require('../db/message.js');
+
 const clients = {};
 
 exports.get_chat_index = [
@@ -14,14 +16,16 @@ exports.get_chat_index = [
 
 exports.get_chat = [
   async (req, res, next) => {
-    const [ populateFriendsVoid, chat ] = await Promise.all([
+    const [ populateFriendsVoid, chat, messages ] = await Promise.all([
       getFriends(req.user),
       getChat(req.params.chatId),
+      getMessages(req.params.chatId),
     ]);
 
     res.render('chat-room', {
       user: req.user,
       chat,
+      messages,
     });
   }
 ];
@@ -38,12 +42,20 @@ exports.ws_chat_visited = function (ws, req) {
     clients[chatId].splice(clientIndex, 1);
   });
 
-  ws.on('message', (msgJSON) => {
+  ws.on('message', async (msgJSON) => {
     const msg = JSON.parse(msgJSON);
+    const message = await createMessage({
+      chat: msg.chatId,
+      author: msg.userId,
+      timestamp: new Date(msg.timestamp),
+      type: msg.messageType,
+      data: msg.content,
+    });
 
-    console.log(msg);
-    // clients[chatId].forEach((client) => {
-    //   client.send(msg);
-    // })
+    await populate(message);
+
+    clients[chatId].forEach((client) => {
+      client.send(JSON.stringify(message.toObject()));
+    })
   });
 };
