@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const { getFriends } = require('../db/user.js');
-const { getChat } = require('../db/chat.js');
-const { createMessage, getMessages, populate } = require('../db/message.js');
+const { getChat, populateAllowedUsers } = require('../db/chat.js');
+const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
 const clients = {};
 
@@ -22,6 +22,8 @@ exports.get_chat = [
       getChat(req.params.chatId),
       getMessages(req.params.chatId),
     ]);
+
+    await populateAllowedUsers(chat);
 
     res.render('chat-room', {
       user: req.user,
@@ -53,7 +55,7 @@ exports.ws_chat_visited = function (ws, req) {
       data: msg.content,
     });
 
-    await populate(message);
+    await populateUsers(message);
 
     clients[chatId].forEach((client) => {
       client.send(JSON.stringify(message.toObject()));
