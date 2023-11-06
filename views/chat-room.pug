@@ -24,3 +24,8 @@ block content
       input(type='hidden' id='user_id' name='user_id' value=user._id)
       input(type="text" id="message_input" name='message_input' autocomplete='off')
       button(id='send-message') Send Message
+
+    div(id='users')
+      ul
+        each allowedUser in chat.allowedUsers
+          li= allowedUser.username
