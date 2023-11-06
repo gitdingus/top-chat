@@ -44,9 +44,18 @@ async function removeUserFromChat(chatId, userId) {
 
   return await chat.save();
 }
+
+async function populateAllowedUsers(chat) {
+  await Chat.populate(chat, {
+    path: 'allowedUsers',
+    select: 'username',
+  });
+}
+
 module.exports = {
   addUserToChat,
   createChat,
   getChat,
+  populateAllowedUsers,
   removeUserFromChat,
 }
