@@ -12,7 +12,7 @@ async function createMessage(messageObj) {
   return await message.save();
 }
 
-async function populate(message) {
+async function populateUsers(message) {
   await Message.populate(message, {
     path: 'author',
     select: 'username',
@@ -33,5 +33,5 @@ async function getMessages(chatId, limit = 20) {
 module.exports = {
   createMessage,
   getMessages,
-  populate,
+  populateUsers,
 };
