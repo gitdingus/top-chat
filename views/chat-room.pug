@@ -26,6 +26,7 @@ block content
       button(id='send-message') Send Message
 
     div(id='users')
+      p Users
       ul
         each allowedUser in chat.allowedUsers
           li= allowedUser.username
