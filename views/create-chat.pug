@@ -1,0 +1,20 @@
+  extends root 
+
+  block content 
+    div(id='chat-form')
+      form(method='post' action='/chat/create')
+        input(type='hidden' name='owner' value=user._id)
+        p 
+          label(for='room_name') Name
+          input(id='room_name' name='room_name' type='text')
+        p 
+          label(for='description') Description
+          textarea(id='description' name='description')
+        p
+          label(for='room-type') Room Type
+          select(id='room-type' name='room_type')
+            option(value='room_type') Private 
+            option(value='room_type') Public 
+        div(class='password')
+          label(for='password-input') Password 
+          input(id='password-input' name='password' type='text')
