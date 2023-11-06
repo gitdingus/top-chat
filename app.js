@@ -63,7 +63,9 @@ app.use('/chat', chatRouter);
 app.use('/users', accountsRouter);
 
 app.use((err, req, res, next) => {
+  console.log(err);
   res.render('error', {
+    error: err,
     user: req.user,
   });
 });
