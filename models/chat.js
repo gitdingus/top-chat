@@ -15,6 +15,25 @@ const chatSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
-})
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  salt: {
+    type: String,
+  },
+  hash: {
+    type: String, 
+  },
+  name: {
+    type: String,
+  },
+  topic: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+});
 
 module.exports = mongoose.model('Chat', chatSchema);
