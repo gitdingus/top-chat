@@ -7,9 +7,20 @@ block content
   if !user
     p Sign up to start chatting! 
   else 
-    p Friends 
-    ul 
-      each entry in user.friends 
-        if entry.status == 'friend'
-          li 
-            p: a(href=`/chat/${entry.chat}`)= entry.friend.username
+    p Friends
+    if user.friends.length > 0 
+      ul 
+        each entry in user.friends 
+          if entry.status == 'friend'
+            li 
+              p: a(href=`/chat/${entry.chat}`)= entry.friend.username
+    else
+      p No one has been added to your friends list
+
+    p My Rooms
+    if usersChatRooms && usersChatRooms.length > 0
+      ul 
+        each room in usersChatRooms
+          li: a(href=`/chat/${room._id}`)= room.name 
+    else 
+      p You have not created any chat rooms
