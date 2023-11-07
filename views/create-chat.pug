@@ -1,20 +1,47 @@
-  extends root 
+extends root 
 
-  block content 
+block scripts 
+  script(src='/scripts/create-chat.js' defer)
+
+
+block styles 
+  link(rel='stylesheet' href='/styles/create-chat.css')
+
+
+block content 
+  if !user
+    p Sign in or create an account to access this page! 
+  else 
     div(id='chat-form')
       form(method='post' action='/chat/create')
         input(type='hidden' name='owner' value=user._id)
         p 
           label(for='room_name') Name
-          input(id='room_name' name='room_name' type='text')
+          input(id='room_name' name='room_name' type='text' value=chat ? chat.room_name : '')
+        if errors && errors.room_name 
+          p= errors.room_name.msg
         p 
           label(for='description') Description
-          textarea(id='description' name='description')
+          textarea(id='description' name='description')= chat ? chat.description : ''
+        if errors && errors.description 
+          p= errors.description.msg
         p
           label(for='room-type') Room Type
           select(id='room-type' name='room_type')
-            option(value='room_type') Private 
-            option(value='room_type') Public 
-        div(class='password')
-          label(for='password-input') Password 
-          input(id='password-input' name='password' type='text')
+            - 
+              let showPrivate = true;
+              if (chat && chat.room_type == 'public')
+                showPrivate = false;
+
+            option(value='private' selected=(showPrivate == true) ? true : false) Private 
+            option(value='public' selected=(showPrivate == true) ? false : true) Public
+        if (errors && errors.room_type)
+          p= errors.room_type.msg
+        div(id='create-password-div')
+          p
+            label(for='password-input') Password 
+            input(id='password-input' name='password' type='text')
+          if (errors && errors.password)
+            p= errors.password.msg
+        button(type='submit') Create Chat
+

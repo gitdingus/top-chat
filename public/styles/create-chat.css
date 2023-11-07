@@ -1,0 +1,7 @@
+#create-password-div {
+  display: none;
+}
+
+#create-password-div.show {
+  display: block;
+}
