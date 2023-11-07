@@ -2,17 +2,21 @@ const asyncHandler = require('express-async-handler');
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { getFriends } = require('../db/user.js');
-const { createChat, getChat, populateAllowedUsers } = require('../db/chat.js');
+const { createChat, getChat, getOwnedRooms, populateAllowedUsers } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
 const clients = {};
 
 exports.get_chat_index = [
   asyncHandler(async (req, res, next) => {
-    await getFriends(req.user);
+    const [ populateFriends, ownedRooms ] = await Promise.all([
+      getFriends(req.user),
+      getOwnedRooms(req.user._id),
+    ]);
 
     res.render('chat', {
       user: req.user,
+      usersChatRooms: ownedRooms,
     });
   }),
 ];
@@ -81,7 +85,7 @@ exports.post_chat_create = [
     }
 
     const chatObj = {};
-    chatObj.name = req.body.name;
+    chatObj.name = req.body.room_name;
     chatObj.description = req.body.description;
     chatObj.type = req.body.room_type;
     chatObj.password = req.body.password;
