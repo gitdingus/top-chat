@@ -109,30 +109,72 @@ exports.post_chat_create = [
 ];
 exports.ws_chat_visited = function (ws, req) {
   const { chatId } = req.params;
+  const userJoinedPacket = {};
+  const currentUsersPacket = {};
+
   if (clients[chatId] === undefined) {
     clients[chatId] = [];
+    clients[chatId].currentUsers = [];
   }
-  clients[chatId].push(ws);
 
-  ws.on('close', () => {
-    const clientIndex = clients[chatId].findIndex((client) => client === ws);
-    clients[chatId].splice(clientIndex, 1);
+  currentUsersPacket.action = 'current-users';
+  currentUsersPacket.data = {
+    currentUsers: clients[chatId].currentUsers,
+  };
+  
+  ws.send(JSON.stringify(currentUsersPacket));
+
+  clients[chatId].push(ws);
+  clients[chatId].currentUsers.push(req.user.username);
+
+  userJoinedPacket.action = 'join';
+  userJoinedPacket.data = {
+    user: req.user.username,
+  };
+
+  clients[chatId].forEach((client) => {
+    client.send(JSON.stringify(userJoinedPacket));
   });
 
-  ws.on('message', async (msgJSON) => {
-    const msg = JSON.parse(msgJSON);
-    const message = await createMessage({
-      chat: msg.chatId,
-      author: msg.userId,
-      timestamp: new Date(msg.timestamp),
-      type: msg.messageType,
-      data: msg.content,
-    });
+  ws.on('close', () => {
+    const userLeftPacket = {};
+    userLeftPacket.action = 'leave';
+    userLeftPacket.data = {
+      user: req.user.username,
+    };
 
-    await populateUsers(message);
+    const userIndex = clients[chatId].currentUsers.findIndex((user) => user === req.user.username);
+    const clientIndex = clients[chatId].findIndex((client) => client === ws);
+
+    clients[chatId].splice(clientIndex, 1);
+    clients[chatId].currentUsers.splice(userIndex, 1);
 
     clients[chatId].forEach((client) => {
-      client.send(JSON.stringify(message.toObject()));
-    })
+      client.send(JSON.stringify(userLeftPacket));
+    });
+  });
+
+  ws.on('message', async (packetJSON) => {
+    const packet = JSON.parse(packetJSON);
+
+    if (packet.action === 'message') {
+      const outgoingPacket = {};
+      const msg = packet.data;
+      const message = await createMessage({
+        chat: msg.chatId,
+        author: msg.userId,
+        timestamp: new Date(msg.timestamp),
+        type: msg.messageType,
+        data: msg.content,
+      });
+  
+      await populateUsers(message);
+  
+      outgoingPacket.action = 'message';
+      outgoingPacket.data = message.toObject();
+      clients[chatId].forEach((client) => {
+        client.send(JSON.stringify(outgoingPacket));
+      });
+    }
   });
 };
