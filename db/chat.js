@@ -54,8 +54,13 @@ async function createChat(chatObj) {
 }
 
 async function getChat(chatId) {
-  const chat = await Chat.findById(chatId).exec();
+  const chat = await Chat.findById(chatId).populate('owner', 'username').exec();
   return chat;
+}
+
+async function getOwnedRooms(userId) {
+  const rooms = await Chat.find({ owner: userId }).exec();
+  return rooms;
 }
 
 async function removeUserFromChat(chatId, userId) {
@@ -88,6 +93,7 @@ module.exports = {
   addUserToChat,
   createChat,
   getChat,
+  getOwnedRooms,
   populateAllowedUsers,
   removeUserFromChat,
 }
