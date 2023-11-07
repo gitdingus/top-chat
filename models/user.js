@@ -44,6 +44,10 @@ const userSchema = new Schema({
       ref: 'Chat',
     },
   }],
+  chats: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Chat',
+  }],
   public: Boolean,
   online: Boolean,
   showOnlineStatus: Boolean,
