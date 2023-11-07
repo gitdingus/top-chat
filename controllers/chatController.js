@@ -2,21 +2,29 @@ const asyncHandler = require('express-async-handler');
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { getFriends } = require('../db/user.js');
-const { createChat, getChat, getOwnedRooms, populateAllowedUsers } = require('../db/chat.js');
+const { 
+  createChat, 
+  getChat, 
+  getOwnedRooms, 
+  getPublicRooms,
+  populateAllowedUsers,
+} = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
 const clients = {};
 
 exports.get_chat_index = [
   asyncHandler(async (req, res, next) => {
-    const [ populateFriends, ownedRooms ] = await Promise.all([
+    const [ populateFriends, ownedRooms, publicRooms ] = await Promise.all([
       getFriends(req.user),
       getOwnedRooms(req.user._id),
+      getPublicRooms(),
     ]);
 
     res.render('chat', {
       user: req.user,
       usersChatRooms: ownedRooms,
+      publicRooms,
     });
   }),
 ];

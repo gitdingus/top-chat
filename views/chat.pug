@@ -24,3 +24,11 @@ block content
           li: a(href=`/chat/${room._id}`)= room.name 
     else 
       p You have not created any chat rooms
+      
+    p Public Rooms
+    if publicRooms.length > 0
+      ul 
+        each room in publicRooms 
+          li: a(href=`/chat/${room._id}`)= room.name 
+    else 
+      p There are no public Rooms
