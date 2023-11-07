@@ -63,6 +63,10 @@ async function getOwnedRooms(userId) {
   return rooms;
 }
 
+async function getPublicRooms() {
+  return await Chat.find({ type: 'public' }).exec();
+}
+
 async function removeUserFromChat(chatId, userId) {
   const [ chat, user ] = await Promise.all([
     Chat.findById(chatId).exec(),
@@ -94,6 +98,7 @@ module.exports = {
   createChat,
   getChat,
   getOwnedRooms,
+  getPublicRooms,
   populateAllowedUsers,
   removeUserFromChat,
 }
