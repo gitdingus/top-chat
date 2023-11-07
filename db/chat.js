@@ -1,5 +1,6 @@
 const Chat = require('../models/chat.js');
 const User = require('../models/user.js');
+const { generateSaltHash } = require('../utils/passwordUtils.js');
 
 async function addUserToChat(chatId, userId) {
   const [ chat, user ] = await Promise.all([
@@ -12,11 +13,42 @@ async function addUserToChat(chatId, userId) {
   return await chat.save();
 }
 
-async function createChat(type, userIds) {
-  const chat = new Chat({
-    type,
-    allowedUsers: userIds,
-  })
+async function createChat(chatObj) {
+  let chat;
+
+  if (chatObj.type === undefined) {
+    throw new Error('room type has not been passed to createChat');
+  }
+  
+  if (chatObj.type === 'private-message') {
+    chat = new Chat({
+      type: chatObj.type,
+      allowedUsers: chatObj.allowedUsers,
+    });
+  }
+
+  if (chatObj.type === 'private') {
+    const salthash = generateSaltHash(chatObj.password);
+    chat = new Chat({
+      type: 'private',
+      name: chatObj.name,
+      description: chatObj.description,
+      salt: salthash.salt,
+      hash: salthash.hash,
+    });
+  }
+
+  if (chatObj.type === 'public') {
+    chat = new Chat({
+      type: 'public',
+      name: chatObj.name,
+      description: chatObj.description,
+    });
+  }
+
+  if (chatObj.type === 'public' || chatObj.type === 'private') {
+    chat.owner = chatObj.owner;
+  }
 
   return await chat.save();
 }
