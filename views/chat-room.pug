@@ -28,7 +28,3 @@ block content
     div(id='users')
       p Users
       ul
-        if chat.owner 
-          li(class='owner')= chat.owner.username
-        each allowedUser in chat.allowedUsers
-          li= allowedUser.username
