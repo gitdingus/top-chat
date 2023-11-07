@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
+const express = require('express');
+const { body, validationResult } = require('express-validator');
 const { getFriends } = require('../db/user.js');
-const { getChat, populateAllowedUsers } = require('../db/chat.js');
+const { createChat, getChat, populateAllowedUsers } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
 const clients = {};
@@ -33,6 +35,66 @@ exports.get_chat = [
   })
 ];
 
+exports.get_chat_create = [
+  (req, res, next) => {
+    res.render('create-chat', {
+      user: req.user,
+    });
+  },
+];
+
+// getting name, description, room type, password (optional)
+exports.post_chat_create = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  body('room_name')
+    .isLength({min: 1}),
+  body('description')
+    .isLength({min: 1}),
+  body('room_type')
+    .custom((val) => {
+      const allowedTypes = ['public', 'private'];
+      return allowedTypes.includes(val);
+    }),
+  body('password')
+    .optional()
+    .custom((val, { req }) => {
+      if (req.body.room_type === 'public') {
+        return true;
+      }
+
+      if (val === undefined || val === '') {
+        return false;
+      }
+
+      return true;
+    }),
+  async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.render('create-chat', {
+        user: req.user,
+        errors: errors.mapped(),
+        chat: req.body,
+      });
+    }
+
+    const chatObj = {};
+    chatObj.name = req.body.name;
+    chatObj.description = req.body.description;
+    chatObj.type = req.body.room_type;
+    chatObj.password = req.body.password;
+
+    if (chatObj.type === 'public' || chatObj.type === 'private') {
+      chatObj.owner = req.user._id;
+    }
+
+    await createChat(chatObj);
+
+    res.status(201).redirect('/chat');
+  },
+];
 exports.ws_chat_visited = function (ws, req) {
   const { chatId } = req.params;
   if (clients[chatId] === undefined) {
