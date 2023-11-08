@@ -1,25 +1,31 @@
 extends root 
 
+block styles 
+  link(rel='stylesheet' href='/styles/forms.css')
+
 block content 
-  form(method='post' action='/users/create-account')
-    p
-      label(for='username') Username
-      input(id='username' name='username' type='input' value=newUser ? newUser.username : '')
-      if error && error.username
-        p #{error.username}
-    p
-      label(for='email') Email
-      input(id='email' name='email' type='email' value=newUser ? newUser.email : '')
-      if error && error.email
-        p #{error.email}
-    p 
-      label(for='password') Password
-      input(id='password' name='password' type='password')
-      if error && error.password   
-        p #{error.password}
-    p 
-      label(for='confirm_password') Confirm Password
-      input(id='confirm_password' name='confirm_password' type='password')
-      if error && error.confirm_password 
-        p #{error.confirm_password}
-    button(type='submit') Create Account
+  div.form-container
+    form(method='post' action='/users/create-account')
+      div.form-title Create account to start chatting!
+      div.form-field
+        label(for='username') Username
+        input(id='username' name='username' type='input' value=newUser ? newUser.username : '')
+        if error && error.username
+          p #{error.username}
+      div.form-field
+        label(for='email') Email
+        input(id='email' name='email' type='email' value=newUser ? newUser.email : '')
+        if error && error.email
+          p #{error.email}
+      div.form-field
+        label(for='password') Password
+        input(id='password' name='password' type='password')
+        if error && error.password   
+          p #{error.password}
+      div.form-field
+        label(for='confirm_password') Confirm Password
+        input(id='confirm_password' name='confirm_password' type='password')
+        if error && error.confirm_password 
+          p #{error.confirm_password}
+      div.buttons
+        button(type='submit' class='primary-btn') Create Account
