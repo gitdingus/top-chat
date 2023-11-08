@@ -3,11 +3,13 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { getFriends } = require('../db/user.js');
 const { 
+  addUserToChat,
   createChat, 
   getChat, 
   getOwnedRooms, 
   getPublicRooms,
   populateAllowedUsers,
+  verifyChatPassword,
 } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
@@ -37,6 +39,13 @@ exports.get_chat = [
       getMessages(req.params.chatId),
     ]);
 
+    if (!chat.owner._id.equals(req.user._id) 
+      && (chat.type === 'private' && !chat.allowedUsers.some((user) => user._id.equals(req.user._id)))) {
+      return res.render('chat-room-login', {
+        user: req.user,
+        chat,
+      });
+    }
     await populateAllowedUsers(chat);
 
     res.render('chat-room', {
@@ -53,6 +62,34 @@ exports.get_chat_create = [
       user: req.user,
     });
   },
+];
+
+exports.post_chat = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  asyncHandler(async (req, res, next) => {
+    const chat = await getChat(req.body.chatId);
+    const correctPassword = await verifyChatPassword(chat, req.body.chatPassword);
+
+    if (!correctPassword) {
+      return res.render('chat-room-login', {
+        user: req.user,
+        chat,
+        error: { password: true }
+      });
+    }
+
+    const [ addUserToChatVoid, messages ] = await Promise.all([
+      addUserToChat(chat._id, req.user._id),
+      getMessages(chat._id),
+    ]);
+    
+    return res.render('chat-room', {
+      user: req.user,
+      chat,
+      messages,
+    });
+  }),
 ];
 
 // getting name, description, room type, password (optional)
