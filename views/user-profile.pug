@@ -11,8 +11,6 @@ block content
     h1 Profile for #{profile.username}
     - let displayOnline = profile.public && profile.showOnlineStatus && profile.online
     p.onlinestatus(class=displayOnline == true ? 'online' : 'offline')= displayOnline == true ? 'Online' : 'Offline'
-    if user._id.equals(profile._id)
-      p: a(href='/users/me/edit') Edit Profile
     if profile.public
       img(src=profile.image || '/images/account.png')
       p Name: #{profile.firstName || ''} #{profile.lastName || ''}
