@@ -18,6 +18,7 @@ block content
       p No one has been added to your friends list
 
     p My Rooms
+    p: a(href='/chat/create') Create Room
     if usersChatRooms && usersChatRooms.length > 0
       ul 
         each room in usersChatRooms
