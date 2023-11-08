@@ -1,0 +1,12 @@
+extends root 
+
+block content 
+  form(method='post')
+    input(type='hidden' name='userId' value=user._id)
+    input(type='hidden' name='chatId' value=chat._id)
+    p
+      label(for='chatPassword') Chat Password
+      input(type='text' id='chatPassword' name='chatPassword')
+    if error && error.password 
+      p Invalid password
+    button(type='submit') Enter chat
