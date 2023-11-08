@@ -55,8 +55,21 @@ app.use(passport.session());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
 app.get('/', (req, res, next) => {
   res.render('index', { user: req.user });
+});
+
+// Only routes allowed to unauthenticated users are:
+// login
+// account creation
+// anything else should redirect to home
+app.use((req, res, next) => {
+  if (!req.path.match(/login|create-account/) && !req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+
+  next();
 });
 
 app.use('/chat', chatRouter);
