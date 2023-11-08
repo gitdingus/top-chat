@@ -23,7 +23,7 @@ exports.get_login = (req, res, next) => {
   const error = {};
   const sessionMessages = req.session.messages;
 
-  if (sessionMessages.length > 0) {
+  if (sessionMessages && sessionMessages.length > 0) {
     // check if last message is from a failed login, if not
     // put it back else, flag failed login
     lastMessage = sessionMessages.pop();
