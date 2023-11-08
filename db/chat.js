@@ -1,16 +1,23 @@
+const mongoose = require('mongoose');
 const Chat = require('../models/chat.js');
 const User = require('../models/user.js');
-const { generateSaltHash } = require('../utils/passwordUtils.js');
+const { generateSaltHash, verifyPassword } = require('../utils/passwordUtils.js');
 
 async function addUserToChat(chatId, userId) {
-  const [ chat, user ] = await Promise.all([
-    Chat.findById(chatId).exec(),
-    User.findById(userId).exec(),
-  ]);
+  const session = await mongoose.startSession();
+  session.withTransaction(async (s) => {
+    const [ chat, user ] = await Promise.all([
+      Chat.findById(chatId).session(s).exec(),
+      User.findById(userId).session(s).exec(),
+    ]);
 
-  chat.allowedUsers.push(user);
+    chat.allowedUsers.addToSet(user);
+    user.chats.addToSet(chat);
 
-  return await chat.save();
+    await chat.save({ session: s });
+    await user.save({ session:s });
+  })
+    .then(() => session.endSession());
 }
 
 async function createChat(chatObj) {
@@ -93,6 +100,10 @@ async function populateAllowedUsers(chat) {
   });
 }
 
+async function verifyChatPassword(chat, password) {
+  return verifyPassword(password, chat.salt, chat.hash);
+}
+
 module.exports = {
   addUserToChat,
   createChat,
@@ -101,4 +112,5 @@ module.exports = {
   getPublicRooms,
   populateAllowedUsers,
   removeUserFromChat,
+  verifyChatPassword,
 }
