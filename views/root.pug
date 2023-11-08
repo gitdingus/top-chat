@@ -8,56 +8,29 @@ html(lang='en')
     link(rel='stylesheet' href='/styles/root.css')
     block styles
 
-    script(src='/scripts/authentication.js' defer)
     block scripts
   body
-    div(id='modals')
-      div(id='create-account-div')
-        div(class='toolbar')
-          button(class='exit') X 
-        form(method='post' action='/users/create-account')
-          p
-            label(for='username') Username
-            input(id='username' name='username' type='input')
-          p
-            label(for='email') Email
-            input(id='email' name='email' type='email')
-          p 
-            label(for='password') Password
-            input(id='password' name='password' type='password')
-          p 
-            label(for='confirm_password') Confirm Password
-            input(id='confirm_password' name='confirm_password' type='password')
-          button(type='submit') Create Account
-
-      div(id='login-div')
-        div(class='toolbar')
-          button(class='exit') X 
-        form(method='post' action='/users/login')
-          p
-            label(for='username') Username
-            input(id='username' name='username' type='input')
-          p 
-            label(for='password') Password
-            input(id='password' name='password' type='password')
-          button(type='submit') Login 
-    header 
-      nav 
+    if !user
+      header 
+        nav 
+          a(href='/') Home
+    if user 
+      header
+        h1 Top Chat
+        ul.user-options
+          li: a(href='/users/me/')= user.username
+          li |
+          li: a(href='/users/me/edit') Edit Profile
+          li |
+          li 
+            form(method='post' action='/users/logout')
+              button(type='submit') Logout  
+      nav
         ul 
           li: a(href='/') Home 
           li: a(href='/users') Users 
           li: a(href='/chat') Chat 
-          if user 
-            li: a(href='/users/friends') Friends
-      div(class='authentication')
-        if !user
-          ul 
-            li: button(id='create-account-btn') Create Account 
-            li: button(id='login-btn') Login 
-        else 
-          p Welcome #{user.username}
-          p: a(href='/users/me') View Profile
-          form(method='post' action='/users/logout')
-            button(type='submit') Logout
-          
-    block content 
+          li: a(href='/users/friends') Friends
+      
+    div.content 
+      block content 

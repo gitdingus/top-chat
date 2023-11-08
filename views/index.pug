@@ -1,8 +1,50 @@
 extends root 
 
+block scripts 
+  script(src='/scripts/index.js' defer)
+
+block styles
+  link(rel='stylesheet' href='/styles/forms.css')
+
 block content 
-  div 
-    if !user 
-      h1 Sign up to start chatting!
-    else
-      p Welcome #{user.username}
+  if !user 
+    div#modals
+      div#create-account-div
+        div.toolbar
+          button.exit X 
+        form(method='post' action='/users/create-account')
+          div.form-title Create Account
+          div.form-field
+            label(for='username') Username
+            input(id='username' name='username' type='input')
+          div.form-field
+            label(for='email') Email
+            input(id='email' name='email' type='email')
+          div.form-field
+            label(for='password') Password
+            input(id='password' name='password' type='password')
+          div.form-field
+            label(for='confirm_password') Confirm Password
+            input(id='confirm_password' name='confirm_password' type='password')
+          div.buttons
+            button(type='button' id='login-btn' class='secondary-btn') Login
+            button(type='submit' class='primary-btn') Create Account
+
+      div#login-div
+        div.toolbar
+          button.exit X 
+        form(method='post' action='/users/login')
+          div.form-title Login
+          div.form-field
+            label(for='username') Username
+            input(id='username' name='username' type='input')
+          div.form-field
+            label(for='password') Password
+            input(id='password' name='password' type='password')
+          div.buttons
+            button(type='button' id='create-account-btn' class='secondary-btn') Create Account 
+            button(type='submit' class='primary-btn') Login 
+
+    div
+      p.
+        #[a(href='/users/login') Log in] or #[a(href='/users/create-account') sign up] to start chatting!
