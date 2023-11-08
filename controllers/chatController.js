@@ -42,6 +42,18 @@ exports.get_chat = [
       getMessages(req.params.chatId),
     ]);
 
+    if (chat.type === 'private-message') {
+      if (chat.allowedUsers.some((user) => user._id.equals(req.user._id))) {
+        return res.render('chat-room', {
+          user: req.user,
+          chat,
+          messages,
+        });
+      } else {
+        throw new Error('Not allowed in this chat room');
+      }
+    }
+
     if (!chat.owner._id.equals(req.user._id) 
       && (chat.type === 'private' && !chat.allowedUsers.some((user) => user._id.equals(req.user._id)))) {
       return res.render('chat-room-login', {
