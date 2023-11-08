@@ -17,6 +17,9 @@ const clients = {};
 
 exports.get_chat_index = [
   asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+      throw new Error('not logged in');
+    }
     const [ populateFriends, ownedRooms, publicRooms ] = await Promise.all([
       getFriends(req.user),
       getOwnedRooms(req.user._id),
