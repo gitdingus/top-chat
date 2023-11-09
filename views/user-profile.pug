@@ -15,7 +15,7 @@ block content
       img(src=profile.image || '/images/account.png')
       p Name: #{profile.firstName || ''} #{profile.lastName || ''}
       p Email: #{profile.email}
-      p Birthday: #{profile.birthday || ''}
+      p Birthday: #{profile.birthday && profile.birthday.toLocaleDateString() || ''}
       p About: #{profile.about}
     p Created: #{profile.created.toLocaleDateString()}
     div(id='friend-status')
