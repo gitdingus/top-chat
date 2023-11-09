@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-.form-field {
+.form-input-field {
   display: flex;
   flex-direction: column;
   margin: 1rem 0;

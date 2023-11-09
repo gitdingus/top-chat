@@ -7,12 +7,12 @@ block content
   div.form-container
     form(method='post' action='/users/login')
       div.form-title Login to start chatting!
-      div.form-field
+      div.form-input-field
         label(for='username') Username
         input(id='username' name='username' type='input')
         if error && error.username 
           p.error #{error.username}
-      div.form-field 
+      div.form-input-field 
         label(for='password') Password
         input(id='password' name='password' type='password')
         if error && error.password 

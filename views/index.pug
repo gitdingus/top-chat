@@ -14,16 +14,16 @@ block content
           button.exit X 
         form(method='post' action='/users/create-account')
           div.form-title Create Account
-          div.form-field
+          div.form-input-field
             label(for='username') Username
             input(id='username' name='username' type='input')
-          div.form-field
+          div.form-input-field
             label(for='email') Email
             input(id='email' name='email' type='email')
-          div.form-field
+          div.form-input-field
             label(for='password') Password
             input(id='password' name='password' type='password')
-          div.form-field
+          div.form-input-field
             label(for='confirm_password') Confirm Password
             input(id='confirm_password' name='confirm_password' type='password')
           div.buttons
@@ -35,10 +35,10 @@ block content
           button.exit X 
         form(method='post' action='/users/login')
           div.form-title Login
-          div.form-field
+          div.form-input-field
             label(for='username') Username
             input(id='username' name='username' type='input')
-          div.form-field
+          div.form-input-field
             label(for='password') Password
             input(id='password' name='password' type='password')
           div.buttons
