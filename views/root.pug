@@ -10,13 +10,10 @@ html(lang='en')
 
     block scripts
   body
-    if !user
-      header 
-        nav 
-          a(href='/') Home
     if user 
-      header
-        h1 Top Chat
+    header
+      h1 Top Chat
+      if user
         ul.user-options
           li: a(href='/users/me/')= user.username
           li |
@@ -25,12 +22,13 @@ html(lang='en')
           li 
             form(method='post' action='/users/logout')
               button(type='submit') Logout  
-      nav
-        ul 
-          li: a(href='/') Home 
+    nav
+      ul 
+        li: a(href='/') Home 
+        if user
           li: a(href='/users') Users 
           li: a(href='/chat') Chat 
           li: a(href='/users/friends') Friends
-      
+    
     div.content 
       block content 
