@@ -1,42 +1,40 @@
 extends root 
 
 mixin inputfield(id, fieldtype, text, initialValue)
-  p
+  div.form-input-field
     label(for=id)= text 
     input(id=id name=id type=fieldtype value=initialValue)
+    if error && error[id] && error[id].msg 
+      p= error[id].msg 
 
-
-mixin errormessage(field)
-  if error && error[field] && error[field].msg 
-    p= error[field].msg 
-
+block styles 
+  link(rel='stylesheet' href='/styles/forms.css')
 
 block content 
   if user 
-    h1 Edit Profile 
-    h2= user.username 
-    form(method='post' action='/users/me/edit')
-      fieldset 
-        legend Personal Information 
-        +inputfield('first_name', 'text', 'First Name', user.firstName || '')
-        +errormessage('first_name')
-        +inputfield('last_name', 'text', 'Last Name', user.lastName || '')
-        +errormessage('last_name')
-        +inputfield('email', 'email', 'Email', user.email || '')
-        +errormessage('email')
-        +inputfield('birthday', 'date', 'Birthday', user.birthdayInputValueFormat || '')
-        +errormessage('birthday')
-        lable(for='about') About
-        textarea(id='about' name='about') #{user.about || ''}
-        +errormessage('about')
-      fieldset 
-        legend Privacy
-        p
-          label(for='public') Make profile public
-          input(id='public' name='public' type='checkbox' checked=user.public || false)
-        p
-          label(for='show_online_status') Show online status 
-          input(id='show_online_status' name='show_online_status' type='checkbox' checked=user.showOnlineStatus || false)
-      button(type='submit') Update profile
+    div.form-container.left
+      form(method='post' action='/users/me/edit')
+        div.form-title Edit Profile
+        fieldset 
+          legend Personal Information 
+          +inputfield('first_name', 'text', 'First Name', user.firstName || '')
+          +inputfield('last_name', 'text', 'Last Name', user.lastName || '')
+          +inputfield('email', 'email', 'Email', user.email || '')
+          +inputfield('birthday', 'date', 'Birthday', user.birthdayInputValueFormat || '')
+          div.form-textarea
+            label(for='about') About
+            textarea(id='about' name='about' rows=10 cols=50) #{user.about || ''}
+            if error && error['about'] && error['about'].msg 
+              p= error['about'].msg 
+        fieldset 
+          legend Privacy
+          div.form-check-field
+            label(for='public') Make profile public: 
+            input(id='public' name='public' type='checkbox' checked=user.public || false)
+          div.form-check-field
+            label(for='show_online_status') Show online status: 
+            input(id='show_online_status' name='show_online_status' type='checkbox' checked=user.showOnlineStatus || false)
+        div.buttons
+          button(type='submit' class='primary-btn') Update profile
   else 
     p User not found

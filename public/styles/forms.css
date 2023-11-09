@@ -1,23 +1,16 @@
-.form-container {
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
-}
-.form-title {
-  font-size: 1.25rem;
-  font-weight: bold;
+form * {
+  font-size: 1rem;
 }
 
-.form-input-field {
-  display: flex;
-  flex-direction: column;
-  margin: 1rem 0;
+input, textarea {
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px #475569;
 }
 
-.buttons{
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+textarea {
+  padding: 20px;
 }
 
 button {
@@ -27,6 +20,47 @@ button {
   --primary-color: #334155;
   --primary-color-hover: #e2e8f0;
 }
+
+fieldset {
+  padding: 0 2.5rem;
+  margin: 1rem 0;
+  border-radius: 10px;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.form-container.left {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.form-input-field,
+.form-textarea {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.form-check-field {
+  margin: 10px;
+}
+
+.buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
 .primary-btn {
   color: var(--primary-color);
   background-color: var(--primary-background);
