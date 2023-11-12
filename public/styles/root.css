@@ -4,6 +4,10 @@
   font-family: 'Roboto';
 }
 
+:root {
+  --shadow-color: #475569;
+}
+
 #modals {
   --modal-background-color: #f8fafc;
   display: none;
@@ -117,5 +121,5 @@ nav ul li a {
   background-color: #f1f5f9;
   border-top-left-radius: 20px;
   padding: 1rem 3rem;
-  box-shadow: inset 1px 1px 3px #475569;
+  box-shadow: inset 1px 1px 3px var(--shadow-color);
 }
