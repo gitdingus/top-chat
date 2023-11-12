@@ -54,3 +54,34 @@
   height: 25px;
   width: 25px;
 }
+
+.users {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+.user {
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 1px 1px 3px #475569;
+}
+
+.user:hover {
+  box-shadow: 1px 1px 3px 1px #475569;
+}
+
+.user:active {
+  box-shadow: 1px 1px 3px #475569;
+}
+
+.user a { 
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.user a p{
+  margin: 0 auto;
+}

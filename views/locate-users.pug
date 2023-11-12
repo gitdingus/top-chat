@@ -13,10 +13,16 @@ block content
         label(for='search') Search
       button: img(src='/images/magnify.svg' alt='search')
 
-    div.users 
-      if users
-        each user in users 
-          p: a(href=user.url) #{user.username}
+    if users
+      if users.length > 0
+        div.users 
+          each foundUser in users 
+            div.user 
+              a(href=foundUser.url)
+                img(src=foundUser.image || '/images/account.png')
+                p #{foundUser.username}
+      else 
+        p No users found
   else 
     p Sign up to access this page.
 
