@@ -4,25 +4,25 @@ const friendshipRejectForm = document.querySelectorAll('.friendship-reject');
 
 if (friendRequestForm.length > 0) {
   friendRequestForm.forEach((form) => {
-    form.addEventListener('submit', addFriend)
+    form.addEventListener('submit', addFriend);
   });
 }
 
 if (friendshipAcceptForm.length > 0) {
   friendshipAcceptForm.forEach((form) => {
-    form.addEventListener('submit', acceptFriend)
+    form.addEventListener('submit', acceptFriend);
   });
 }
 
-if (friendshipRejectForm > 0) {
+if (friendshipRejectForm.length > 0) {
   friendshipRejectForm.forEach((form) => {
-    form.addEventListener('submit', removeFriend)
+    form.addEventListener('submit', removeFriend);
   });
 }
 
 function acceptFriend(e) {
   e.preventDefault();
-  const friendId = friendshipAcceptForm.friendId.value;
+  const friendId = e.target.friendId.value;
 
   fetch('/users/me/acceptfriend', {
     method: 'post',
@@ -56,7 +56,7 @@ function acceptFriend(e) {
 
 function addFriend(e) {
   e.preventDefault();
-  const friendId = friendRequestForm.friendId.value;
+  const friendId = e.target.friendId.value;
   
   fetch('/users/me/addfriend', {
     method: 'post',
@@ -89,7 +89,7 @@ function addFriend(e) {
 
 function removeFriend(e) {
   e.preventDefault();
-  const friendId = friendshipRejectForm.friendId.value;
+  const friendId = e.target.friendId.value;
 
   fetch('/users/me/rejectfriend', {
     method: 'post',
