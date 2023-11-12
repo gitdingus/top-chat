@@ -1,4 +1,4 @@
 mixin friendForms(className, btnText, friendId)
   form(class=className)
     input(type='hidden' name='friendId' value=friendId)
-    button(type='submit')= btnText
+    button(type='submit' class='primary-btn')= btnText
