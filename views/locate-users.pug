@@ -1,12 +1,17 @@
 extends root 
 
+
+block styles
+  link(rel='stylesheet' href='/styles/locate-users.css')
+
+
 block content 
   if user
-    form(method='post' action='')
-      p
-        label(for='search') Search Users 
-        input(id='search' name='search' type='search' value=term || '')
-      button Search 
+    form#search-form(method='post')
+      div#search-input
+        input(id='search' name='search' type='search' value=term || '' required)
+        label(for='search') Search
+      button: img(src='/images/magnify.svg' alt='search')
 
     div.users 
       if users
