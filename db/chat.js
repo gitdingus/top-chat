@@ -60,6 +60,19 @@ async function createChat(chatObj) {
   return await chat.save();
 }
 
+async function findPrivateMessages(user1, user2) {
+  const chat = await Chat
+    .find({ 
+      type: 'private-message', 
+      allowedUsers: {
+        $size: 2,
+        $all: [ user1._id, user2._id ],
+      },
+    }).exec();
+
+  return chat;
+}
+
 async function getChat(chatId) {
   const chat = await Chat.findById(chatId).populate('owner', 'username').exec();
   return chat;
@@ -110,6 +123,7 @@ module.exports = {
   getChat,
   getOwnedRooms,
   getPublicRooms,
+  findPrivateMessages,
   populateAllowedUsers,
   removeUserFromChat,
   verifyChatPassword,
