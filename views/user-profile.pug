@@ -2,22 +2,44 @@ extends root
 
 include mixins/friend-form-mixin.pug
 
+
 block scripts 
   script(src='/scripts/friend_request.js' defer)
 
 
+block styles 
+  link(rel='stylesheet' href='/styles/user-profile.css')
+  link(rel='stylesheet' href='/styles/forms.css')
+
+  
 block content 
   if user && profile 
-    h1 Profile for #{profile.username}
-    - let displayOnline = profile.public && profile.showOnlineStatus && profile.online
-    p.onlinestatus(class=displayOnline == true ? 'online' : 'offline')= displayOnline == true ? 'Online' : 'Offline'
+    div.user-name
+      - 
+        let onlineStatus = '';
+        let displayOnline = profile.public && profile.showOnlineStatus
+        if (displayOnline) {
+          onlineStatus = profile.online ? 'online' : 'offline';
+        } 
+      h1(class=`${onlineStatus}`) Profile for #{profile.username}
     if profile.public
-      img(src=profile.image || '/images/account.png')
-      p Name: #{profile.firstName || ''} #{profile.lastName || ''}
-      p Email: #{profile.email}
-      p Birthday: #{profile.birthday && profile.birthday.toLocaleDateString() || ''}
-      p About: #{profile.about}
-    p Created: #{profile.created.toLocaleDateString()}
+      div.avatar
+        img(src=profile.image || '/images/account.png')
+        p Joined #{profile.created.toLocaleDateString()}
+      div.user-info
+        if profile.firstName || profile.lastName
+          h2 Name
+          p.info #{profile.firstName || ''} #{profile.lastName || ''}
+        if profile.email
+          h2 Email
+          p.info #{profile.email}
+        if profile.birthday
+          h2 Birthday
+          p.info #{profile.birthday && profile.birthday.toLocaleDateString() || ''}
+      div.about
+        if profile.about
+          h2 About
+          p.info #{profile.about}
     div(id='friend-status')
       - 
         let friendStatus = 'not found';
