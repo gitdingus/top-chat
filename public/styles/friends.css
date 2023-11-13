@@ -1,0 +1,43 @@
+.friends {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.friend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-name p {
+  text-align: center;
+  position: relative;
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.user-name p.offline::after,
+.user-name p.online::after {
+  position: absolute; 
+  content: '●';
+  font-size: .9rem;
+  margin-left: 1rem;
+}
+
+.user-name p.online::after {
+  color: green;
+}
+
+.user-name p.offline::after {
+  color: red;
+}
+
+.actions {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+form button {
+  width: 100%;
+}

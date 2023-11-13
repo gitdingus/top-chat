@@ -5,6 +5,11 @@ include mixins/friend-form-mixin.pug
 block scripts 
   script(src='/scripts/friend_request.js' defer)
   
+block styles 
+  link(rel='stylesheet' href='/styles/friends.css')
+  link(rel='stylesheet' href='/styles/forms.css')
+
+
 block content 
   if !user  
     p Sign up to start chatting! 
@@ -13,23 +18,28 @@ block content
     p Add friends to start chatting! 
   
   else
+    h1 Friends
     div.friends 
       each entry in user.friends 
         div.friend 
-          p.username= entry.friend.username 
-            if entry.status == 'friend' && entry.friend.showOnlineStatus
-              span(class=`online-status ${entry.friend.online ? 'online' : 'offline'}`)= entry.friend.online ? 'Online' : 'Offline'
+          img(src=entry.friend.image || '/images/account.png')
+          div.user-name
+            - 
+              let onlineStatus = '';
+              let displayOnline = entry.friend.public && entry.friend.showOnlineStatus
+              if (displayOnline) {
+                onlineStatus = entry.friend.online ? 'online' : 'offline';
+              } 
+            p(class=`${onlineStatus}`) #{entry.friend.username}
             
-            if entry.status == 'sent'
-              span.friend-status friendship request pending 
-              div 
-                +friendForms('friendship-reject', 'Cancel Friend Request', entry.friend._id)
-            else if entry.status == 'recieved'
-              span.friend-status requested to be your friend 
-              div 
-                +friendForms('friendship-accept', 'Accept Friend Request', entry.friend._id)
-              div 
-                +friendForms('friendship-reject', 'Reject Friend Request', entry.friend._id)
-            else if entry.status == 'friend'
-              div 
-                +friendForms('friendship-reject', 'Remove Friend', entry.friend._id) 
+          if entry.status == 'sent'
+            div.actions
+              +friendForms('friendship-reject', 'Cancel Friend Request', entry.friend._id)
+          else if entry.status == 'recieved'
+            div.actions
+              +friendForms('friendship-accept', 'Accept Friend Request', entry.friend._id)
+              +friendForms('friendship-reject', 'Reject Friend Request', entry.friend._id)
+          else if entry.status == 'friend'
+            div.actions
+              a.link-button.primary-btn(href=`/chat/${entry.chat._id}`) Chat
+              +friendForms('friendship-reject', 'Remove Friend', entry.friend._id) 
