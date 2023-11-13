@@ -144,7 +144,7 @@ async function findByUsername(username) {
 async function getFriends(user) {
   await User.populate(user.friends, {
     path: 'friend',
-    select: 'username url online showOnlineStatus',
+    select: '-salt -hash -friends -chats',
   });
 }
 
