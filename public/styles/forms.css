@@ -13,12 +13,18 @@ textarea {
   padding: 20px;
 }
 
-button {
+button,
+.link-button {
   --primary-background: #cbd5e1;
   --secondary-background: transparent;
   --primary-background-hover: #94a3b8;
   --primary-color: #334155;
   --primary-color-hover: #e2e8f0;
+}
+
+.link-button {
+  text-decoration: none;
+  text-align: center;
 }
 
 fieldset {
