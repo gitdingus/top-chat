@@ -1,0 +1,13 @@
+.popup {
+  display: none;
+}
+
+.popup.active {
+  display: inline-block;
+  position: absolute;
+
+  background-color: #f1f5f9;
+  padding: 2rem;
+  border-radius: .5rem;
+  box-shadow: 1px 1px 2px 2px #475569;
+}
