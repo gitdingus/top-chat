@@ -12,19 +12,6 @@ if (createAccountDiv && loginDiv) {
   });
 }
 
-exitModalBtns.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const activeModal = document.querySelector('#modals .active');
-    const searchParams = new URLSearchParams(window.location.search);
-    activeModal.classList.remove('active');
-    modals.classList.remove('open');
-
-    if (searchParams.has('create-account')) {
-      searchParams.delete('create-account');
-    }
-  });
-});
-
 if (createAccountBtn) {
   createAccountBtn.addEventListener('click', function() {
     modals.classList.add('open');
@@ -44,3 +31,11 @@ if (loginBtn) {
     createAccountDiv.classList.remove('active');
   });
 }
+
+exitModalBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const activeModal = document.querySelector('#modals .active');
+    activeModal.classList.remove('active');
+    modals.classList.remove('open');
+  });
+});
