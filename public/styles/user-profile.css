@@ -1,8 +1,8 @@
-h1 { 
+.content h1 { 
   font-size: 1.25rem;
 }
 
-h2 {
+.content h2 {
   font-size: 1rem;
   margin: 1.25rem 0 .5rem;
 }
