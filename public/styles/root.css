@@ -8,50 +8,6 @@
   --shadow-color: #475569;
 }
 
-#modals {
-  --modal-background-color: #f8fafc;
-  display: none;
-  background-color: #e2e8f0;
-}
-
-#modals.open {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-#modals>div {
-  background-color: var(--modal-background-color);
-  box-shadow: 2px 2px 3px black;
-  border-radius: 20px;
-  display: none;
-  padding: 2rem 3rem;
-  position: relative;
-}
-
-#modals>div.active {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#modals .toolbar {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-#modals .toolbar button {
-  background-color: transparent;
-  border: 0;
-}
-
 html,
 body {
   height: 100vh;
