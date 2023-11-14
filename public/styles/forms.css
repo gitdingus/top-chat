@@ -13,7 +13,7 @@ textarea {
   padding: 20px;
 }
 
-button,
+form button,
 .link-button {
   --primary-background: #cbd5e1;
   --secondary-background: transparent;
