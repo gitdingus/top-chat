@@ -43,6 +43,8 @@ exports.get_chat = [
       getMessages(req.params.chatId),
     ]);
 
+    await populateAllowedUsers(chat);
+    
     if (chat.type === 'private-message') {
       if (chat.allowedUsers.some((user) => user._id.equals(req.user._id))) {
         return res.render('chat-room', {
@@ -62,7 +64,6 @@ exports.get_chat = [
         chat,
       });
     }
-    await populateAllowedUsers(chat);
 
     res.render('chat-room', {
       user: req.user,
