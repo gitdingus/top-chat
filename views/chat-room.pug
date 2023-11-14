@@ -2,29 +2,64 @@ extends root
 
 block styles 
   link(rel='stylesheet' href='/styles/chat-room.css')
+  link(rel='stylesheet' href='/styles/forms.css')
+  link(rel='stylesheet' href='/styles/popup.css')
+  link(rel='stylesheet' href='/styles/modals.css')
+
 block scripts 
   script(src='/scripts/chat.js' defer)
+  script(src='/scripts/popup.js' defer)
+  script(src='/scripts/chat-room.js' defer)
 
 block content 
   if !user
     p Sign up to start chatting! 
-  else 
-    p Hello #{user.username}, type a message!
-    div(id='messages')
-      if messages.length > 0
-        - messages.reverse() 
-        each message in messages 
-          div(class='message' data-messageid=message._id)
-            p 
-              span #{message.author.username}: 
-              if message.type == 'text'
-                span= message.data
-    form(id='message-form')
-      input(type='hidden' id='chat_id' name='chat_id' value=chat._id)
-      input(type='hidden' id='user_id' name='user_id' value=user._id)
-      input(type="text" id="message_input" name='message_input' autocomplete='off')
-      button(id='send-message') Send Message
+  else
+    if user._id.equals(chat.owner._id)
+      div#modals 
+        div#room-settings 
+          div.toolbar 
+            button.exit X 
+          form#set-topic 
+            div.form-input-field 
+              label(for='topic') Topic 
+              input(name='chatId' type='hidden' value=chat._id)
+              input(name='userId' type='hidden' value=user._id)
+              input(id='topic' name='topic' type='text')
+            div.buttons 
+              button(type='submit').primary-btn Set topic 
+    div.chat-info.popup-parent
+      if chat.type == 'private-message'
+        p Private message with: #{chat.allowedUsers.find((occupant) => !occupant._id.equals(user._id)).username}
+      else if chat.type == 'private' || chat.type == 'public'
+        if chat.name
+          div.title-bar
+            h2 In chat: #[span.room-name.popup-trigger #{chat.name}]
+            if user._id.equals(chat.owner._id)
+              button#owner-options: img(src='/images/cog.svg' alt='settings')
+        if chat.topic   
+          p Topic: #[span#chat-topic #{chat.topic}]
 
-    div(id='users')
-      p Users
-      ul
+        div.popup 
+          p Owner: #{chat.owner.username} 
+          p Description: #{chat.description}
+        
+    div#chat-room
+      div(id='messages')
+        if messages.length > 0
+          - messages.reverse() 
+          each message in messages 
+            div(class='message' data-messageid=message._id)
+              p 
+                span.username #{message.author.username}: 
+                if message.type == 'text'
+                  span.message-content= message.data
+      form(id='message-form')
+        input(type='hidden' id='chat_id' name='chat_id' value=chat._id)
+        input(type='hidden' id='user_id' name='user_id' value=user._id)
+        input(type="text" id="message_input" name='message_input' autocomplete='off')
+        button(id='send-message' class='primary-btn') Send Message
+
+      div(id='users')
+        p Users
+        ul

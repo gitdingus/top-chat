@@ -3,6 +3,10 @@ const messageForm = document.querySelector('#message-form');
 const sendBtn = document.querySelector('#send-message');
 const messageInput = document.querySelector('#message_input');
 const usersList = document.querySelector('#users ul');
+const ownerOptions = document.querySelector('#owner-options');
+const roomSettings = document.querySelector('#room-settings');
+const setTopicForm = document.querySelector('#set-topic');
+
 let autoScroll = true;
 let ws;
 
@@ -59,12 +63,14 @@ if (messageForm !== null) {
         }
       });
     }
+
+    if (packet.action == 'topic-change') {
+      topicChanged(packet.data);
+    }
   });
 
   ws.addEventListener('close', (code, buf) => {
-    const disconnectMessage = document.createElement('p');
-    disconnectMessage.textContent = 'You have been disconnected from the server...';
-    messages.appendChild(disconnectMessage);
+    messages.appendChild(createAnnouncement('You have been disconnected from the server...'));
     messages.scrollTo(0, messages.scrollHeight);
     sendBtn.setAttribute('disabled', true);
   })
@@ -106,7 +112,10 @@ function createMessage(message) {
     content.textContent = message.data;
   }
 
+  content.classList.add('message-content');
+
   username.textContent = message.author.username + ': ';
+  username.classList.add('username');
 
   messageP.appendChild(username);
   messageP.appendChild(content);
@@ -137,4 +146,51 @@ function TextMessage({ chatId, userId, content }) {
   newMessage.timestamp = new Date();
 
   return newMessage;
+}
+
+setTopicForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const body = {
+    chatId: e.target.chatId.value,
+    userId: e.target.userId.value,
+    topic: e.target.topic.value,
+  };
+
+  const json = JSON.stringify(body);
+  fetch(`/chat/${e.target.chatId.value}/edit`, {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: json,
+  })
+    .then((res) => {
+      if (!res.status === 200) {
+        throw new Error('There has been an error submitting the form');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  const activeModal = document.querySelector('#modals .active');
+  activeModal.classList.remove('active');
+  modals.classList.remove('open');
+
+  return false;
+});
+
+function topicChanged(topic) {
+  const topicElem = document.querySelector('#chat-topic');
+  topicElem.textContent = topic;
+
+  messages.appendChild(createAnnouncement(`Topic has changed to: ${topic}`));
+}
+
+function createAnnouncement(text) {
+  const p = document.createElement('p');
+
+  p.classList.add('announcement');
+  p.textContent = text;
+  return p;
 }
