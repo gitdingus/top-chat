@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const { getFriends } = require('../db/user.js');
 const { 
   addUserToChat,
+  changeTopic,
   createChat, 
   getChat, 
   getOwnedRooms, 
@@ -159,6 +160,37 @@ exports.post_chat_create = [
     res.status(201).redirect('/chat');
   },
 ];
+
+exports.post_edit_chat = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  body('userId'),
+  body('chatId'),
+  body('topic') 
+    .optional(),
+  async (req, res, next) => {
+    await changeTopic(req.user, req.body.chatId, req.body.topic)
+      .then(() => {
+        if (clients[req.body.chatId].length > 0) {
+          clients[req.body.chatId].forEach((ws) => {
+            const packet = {
+              action: 'topic-change',
+              data: req.body.topic,
+            };
+            const json = JSON.stringify(packet);
+            ws.send(json);
+          });
+        }
+
+      })
+      .catch((err) => {
+        next(err);
+      });
+
+    return res.status(200).json({ msg: 'success' });
+  },
+];
+
 exports.ws_chat_visited = function (ws, req) {
   const { chatId } = req.params;
   const userJoinedPacket = {};

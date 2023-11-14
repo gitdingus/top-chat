@@ -20,6 +20,18 @@ async function addUserToChat(chatId, userId) {
     .then(() => session.endSession());
 }
 
+async function changeTopic(user, chatId, topic) {
+  const chat = await Chat.findById(chatId);
+
+  if (!chat.owner._id.equals(user._id)) {
+    throw new Error('user is not owner of chat room');
+  }
+
+  chat.topic = topic;
+
+  await chat.save();
+}
+
 async function createChat(chatObj) {
   let chat;
 
@@ -119,6 +131,7 @@ async function verifyChatPassword(chat, password) {
 
 module.exports = {
   addUserToChat,
+  changeTopic,
   createChat,
   getChat,
   getOwnedRooms,
