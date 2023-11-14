@@ -1,12 +1,16 @@
 extends root 
 
+block styles 
+  link(rel='stylesheet' href='/styles/forms.css')
+
 block content 
-  form(method='post')
-    input(type='hidden' name='userId' value=user._id)
-    input(type='hidden' name='chatId' value=chat._id)
-    p
-      label(for='chatPassword') Chat Password
-      input(type='text' id='chatPassword' name='chatPassword')
-    if error && error.password 
-      p Invalid password
-    button(type='submit') Enter chat
+  div.form-container
+    form(method='post')
+      input(type='hidden' name='userId' value=user._id)
+      input(type='hidden' name='chatId' value=chat._id)
+      div.form-input-field
+        label(for='chatPassword') Chat Password
+        input(type='text' id='chatPassword' name='chatPassword')
+      if error && error.password 
+        p Invalid password
+      button(type='submit').primary-btn Enter chat
