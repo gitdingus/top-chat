@@ -15,7 +15,7 @@ block content
   if !user
     p Sign up to start chatting! 
   else
-    if user._id.equals(chat.owner._id)
+    if chat.type == 'public' || chat.type == 'private' && user._id.equals(chat.owner._id)
       div#modals 
         div#room-settings 
           div.toolbar 
@@ -36,9 +36,8 @@ block content
           div.title-bar
             h2 In chat: #[span.room-name.popup-trigger #{chat.name}]
             if user._id.equals(chat.owner._id)
-              button#owner-options: img(src='/images/cog.svg' alt='settings')
-        if chat.topic   
-          p Topic: #[span#chat-topic #{chat.topic}]
+              button#owner-options: img(src='/images/cog.svg' alt='settings')  
+        p Topic: #[span#chat-topic #{chat.topic || 'No topic set'}]
 
         div.popup 
           p Owner: #{chat.owner.username} 
