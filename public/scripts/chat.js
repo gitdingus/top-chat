@@ -42,26 +42,94 @@ if (messageForm !== null) {
     }
 
     if (packet.action === 'current-users') {
+      const userElements = Array.from(usersList.children);
       const currentUsers = packet.data.currentUsers;
-      currentUsers.forEach((user) => {
-        const li = createUserListItem(user);
-        usersList.appendChild(li);
-      });
+      if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
+        currentUsers.forEach((user) => {
+          const li = userElements.find((elem) => {
+            return elem.textContent === user;
+          });
+
+          if (li) {
+            li.classList.add('online');
+          }
+        });
+
+      }
+      
+      if (packet.roomType === 'public') {
+        currentUsers.forEach((user) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+
+          a.textContent = user;
+          a.href=`/users/${user}`;
+
+          li.appendChild(a);
+          li.classList.add('online');
+
+          userElements.push(li);
+        });        
+      }
+
+      userElements.sort(sortUsersFunction);
+      updateUsersList(usersList, userElements);
     }
 
     if (packet.action === 'join') {
+      const userElements = Array.from(usersList.children);
       const newUser = packet.data.user;
-      const li = createUserListItem(newUser);
-      usersList.appendChild(li);
+
+      if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
+
+        const li = userElements.find((elem) => {
+          return elem.textContent === newUser;
+        })
+
+        if (li) {
+          li.classList.add('online');
+        }
+      }
+
+      if (packet.roomType === 'public') {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+
+        a.textContent = newUser;
+        a.href=`/users/${newUser}`;
+
+        li.appendChild(a);
+        li.classList.add('online');
+
+        userElements.push(li);
+      }
+
+      userElements.sort(sortUsersFunction);
+      updateUsersList(usersList, userElements);
     }
 
     if (packet.action === 'leave') {
-      const users = usersList.querySelectorAll('li');
-      users.forEach((user) => {
-        if (user.textContent === packet.data.user) {
-          user.remove();
+      const userElements = Array.from(usersList.children);
+      if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
+        userElements.forEach((user) => {
+          if (user.textContent === packet.data.user) {
+            user.classList.remove('online');
+          }
+        });
+
+      }
+
+      if (packet.roomType === 'public') {
+        const i = userElements.findIndex((elem, i) => {
+          return elem.textContent === packet.data.user;
+        })
+
+        if (i >= 0) {
+          userElements.splice(i, 1);
         }
-      });
+      }
+      userElements.sort(sortUsersFunction);
+      updateUsersList(usersList, userElements);
     }
 
     if (packet.action == 'topic-change') {
@@ -193,4 +261,36 @@ function createAnnouncement(text) {
   p.classList.add('announcement');
   p.textContent = text;
   return p;
+}
+
+function sortUsersFunction(a, b) {
+  if (a.classList.contains('online') && !b.classList.contains('online')) {
+    return -1;
+  } 
+
+  if (!a.classList.contains('online') && b.classList.contains('online')) {
+    return 1;
+  }
+
+  if (a.textContent < b.textContent) {
+    return - 1;
+  }
+
+  if (a.textContent > b.textContent) {
+    return 1;
+  }
+
+  if (a.textContent === b.textContent) {
+    return 0;
+  }
+}
+
+function updateUsersList(list, newList) {
+  while (list.children.length > 0) {
+    list.firstElementChild.remove();
+  }
+
+  newList.forEach((item) => {
+    list.appendChild(item);
+  });
 }
