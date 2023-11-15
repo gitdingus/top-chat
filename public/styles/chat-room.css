@@ -76,3 +76,12 @@
 .chat-info p {
   margin: .5rem 0;
 }
+
+#users li a{
+  color: gray;
+}
+
+#users li.online a{
+  color: black;
+  font-weight: bold;
+}
