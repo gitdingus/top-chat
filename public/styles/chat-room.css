@@ -68,3 +68,11 @@
   width: 25px;
   height: 25px;
 }
+
+.title-bar h2 {
+  margin: 0;
+}
+
+.chat-info p {
+  margin: .5rem 0;
+}
