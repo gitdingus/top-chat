@@ -1,5 +1,8 @@
 extends root 
 
+block styles 
+  link(rel='stylesheet' href='/styles/chat.css')
+
 block scripts 
   script(src='/scripts/chat.js' defer)
 
@@ -7,7 +10,7 @@ block content
   if !user
     p Sign up to start chatting! 
   else 
-    p Friends
+    h2.section-header Friends
     if user.friends.length > 0 
       ul 
         each entry in user.friends 
@@ -17,8 +20,11 @@ block content
     else
       p No one has been added to your friends list
 
-    p My Rooms
-    p: a(href='/chat/create') Create Room
+    h2.section-header My Rooms 
+      span.header-image
+        a(href='/chat/create')
+          img(src='/images/plus.svg' alt='create chat')
+
     if usersChatRooms && usersChatRooms.length > 0
       ul 
         each room in usersChatRooms
@@ -26,7 +32,7 @@ block content
     else 
       p You have not created any chat rooms
       
-    p Public Rooms
+    h2.section-header Public Rooms
     if publicRooms.length > 0
       ul 
         each room in publicRooms 
