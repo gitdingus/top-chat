@@ -192,17 +192,20 @@ exports.post_edit_chat = [
   },
 ];
 
-exports.ws_chat_visited = function (ws, req) {
+exports.ws_chat_visited = async function (ws, req) {
   const { chatId } = req.params;
   const userJoinedPacket = {};
   const currentUsersPacket = {};
 
   if (clients[chatId] === undefined) {
+    const chat = await getChat(chatId);
     clients[chatId] = [];
     clients[chatId].currentUsers = [];
+    clients[chatId].roomType = chat.type;
   }
 
   currentUsersPacket.action = 'current-users';
+  currentUsersPacket.roomType = clients[chatId].roomType;
   currentUsersPacket.data = {
     currentUsers: clients[chatId].currentUsers,
   };
@@ -213,6 +216,7 @@ exports.ws_chat_visited = function (ws, req) {
   clients[chatId].currentUsers.push(req.user.username);
 
   userJoinedPacket.action = 'join';
+  userJoinedPacket.roomType = clients[chatId].roomType;
   userJoinedPacket.data = {
     user: req.user.username,
   };
@@ -224,6 +228,7 @@ exports.ws_chat_visited = function (ws, req) {
   ws.on('close', () => {
     const userLeftPacket = {};
     userLeftPacket.action = 'leave';
+    userLeftPacket.roomType = clients[chatId].roomType;
     userLeftPacket.data = {
       user: req.user.username,
     };
