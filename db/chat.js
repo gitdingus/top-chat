@@ -85,6 +85,11 @@ async function findPrivateMessages(user1, user2) {
   return chat;
 }
 
+async function getAllowedChats(user) {
+  const chats = await Chat.find({ type: 'private', allowedUsers: user._id }).exec();
+  return chats;
+}
+
 async function getChat(chatId) {
   const chat = await Chat.findById(chatId).populate('owner', 'username').exec();
   return chat;
@@ -133,6 +138,7 @@ module.exports = {
   addUserToChat,
   changeTopic,
   createChat,
+  getAllowedChats,
   getChat,
   getOwnedRooms,
   getPublicRooms,
