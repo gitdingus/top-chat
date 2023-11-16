@@ -100,6 +100,8 @@ exports.post_chat = [
       addUserToChat(chat._id, req.user._id),
       getMessages(chat._id),
     ]);
+
+    await populateAllowedUsers(chat);
     
     return res.render('chat-room', {
       user: req.user,
