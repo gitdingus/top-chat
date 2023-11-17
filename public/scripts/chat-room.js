@@ -223,37 +223,39 @@ function TextMessage({ chatId, userId, content }) {
   return newMessage;
 }
 
-setTopicForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const body = {
-    chatId: e.target.chatId.value,
-    userId: e.target.userId.value,
-    topic: e.target.topic.value,
-  };
+if (setTopicForm) {
+  setTopicForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const body = {
+      chatId: e.target.chatId.value,
+      userId: e.target.userId.value,
+      topic: e.target.topic.value,
+    };
 
-  const json = JSON.stringify(body);
-  fetch(`/chat/${e.target.chatId.value}/edit`, {
-    method: 'post',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: json,
-  })
-    .then((res) => {
-      if (!res.status === 200) {
-        throw new Error('There has been an error submitting the form');
-      }
+    const json = JSON.stringify(body);
+    fetch(`/chat/${e.target.chatId.value}/edit`, {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: json,
     })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        if (!res.status === 200) {
+          throw new Error('There has been an error submitting the form');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-  const activeModal = document.querySelector('#modals .active');
-  activeModal.classList.remove('active');
-  modals.classList.remove('open');
+    const activeModal = document.querySelector('#modals .active');
+    activeModal.classList.remove('active');
+    modals.classList.remove('open');
 
-  return false;
-});
+    return false;
+  });
+}
 
 function topicChanged(topic) {
   const topicElem = document.querySelector('#chat-topic');
@@ -305,10 +307,12 @@ function updateUsersList(list, newList) {
 const modals = document.querySelector('#modals');
 const exitBtns = document.querySelectorAll('.exit')
 
-ownerOptions.addEventListener('click', () => {
-  modals.classList.add('open');
-  roomSettings.classList.add('active');
-});
+if (ownerOptions) {
+  ownerOptions.addEventListener('click', () => {
+    modals.classList.add('open');
+    roomSettings.classList.add('active');
+  });
+}
 
 exitBtns.forEach((btn) => {
   btn.addEventListener('click', (e) => {
