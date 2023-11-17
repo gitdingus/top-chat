@@ -1,6 +1,44 @@
-.header-image img {
-  position: relative;
-  top: 3px;
+.section-header {
+  display: flex;
+  align-items: center;
+}
+.section-header button,
+.section-header a {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 200ms 0ms ease-in-out;
+}
+
+.section-header a img,
+.section-header button img {
   height: 25px;
   width: 25px;
+}
+
+.section-header button:hover,
+.section-header a img:hover {
+  transform: scale(1.2);
+}
+
+.category .list {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms 0ms ease-in-out;
+}
+
+.category.expanded .list {
+  grid-template-rows: 1fr;
+}
+
+.category .list > ul {
+  overflow: hidden;
+}
+
+.category .section-header button img{
+  content: url('/images/chevron-down.svg');
+}
+
+.category.expanded .section-header button img{
+  content: url('/images/chevron-up.svg');
 }
