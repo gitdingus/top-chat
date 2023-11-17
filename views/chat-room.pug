@@ -27,7 +27,7 @@ block content
               input(id='topic' name='topic' type='text')
             div.buttons 
               button(type='submit').primary-btn Set topic 
-    div.chat-info.popup-parent
+    div(class=`chat-info ${chat.type == 'private' || chat.type == 'public' ? 'popup-parent' : ''}`)
       if chat.type == 'private-message'
         p Private message with: #{chat.allowedUsers.find((occupant) => !occupant._id.equals(user._id)).username}
       else if chat.type == 'private' || chat.type == 'public'
