@@ -31,7 +31,7 @@
   grid-template-rows: 1fr;
 }
 
-.category .list > ul {
+.category .list > * {
   overflow: hidden;
 }
 
@@ -40,5 +40,5 @@
 }
 
 .category.expanded .section-header button img{
-  content: url('/images/chevron-up.svg');
+  content: url('/images/minus.svg');
 }
