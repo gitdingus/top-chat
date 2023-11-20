@@ -154,6 +154,15 @@ async function locateUsers(data) {
   return users;
 }
 
+async function populateChats(user) {
+  await User.populate(user, {
+    path: 'chats',
+    select: 'name topic description',
+  });
+
+  return user;
+}
+
 async function rejectFriend(user, friendId) {
   let result;
 
@@ -219,6 +228,7 @@ module.exports = {
   findByUsername,
   getFriends,
   locateUsers,
+  populateChats,
   rejectFriend,
   updateUser,
 }

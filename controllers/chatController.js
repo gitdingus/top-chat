@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { getFriends } = require('../db/user.js');
+const { getFriends, populateChats } = require('../db/user.js');
 const { 
   addUserToChat,
   changeTopic,
@@ -25,6 +25,7 @@ exports.get_chat_index = [
       getFriends(req.user),
       getOwnedRooms(req.user._id),
       getPublicRooms(),
+      populateChats(req.user),
     ]);
 
     res.render('chat', {

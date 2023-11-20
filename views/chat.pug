@@ -37,6 +37,18 @@ block content
         else 
           p You have not created any chat rooms
 
+    div.category 
+      div.section-header 
+        h2 Recent Chats 
+        button.expand-section(type='button'): img(src='/images/chevron-down.svg' alt='expand recent chats')
+      div.list 
+        if user.chats 
+          ul  
+            each room in user.chats 
+              li: a(href=`/chat/${room._id}`)= room.name 
+        else 
+          p No recent chats 
+
     div.category      
       div.section-header 
         h2 Public Rooms
