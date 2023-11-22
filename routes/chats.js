@@ -8,6 +8,7 @@ chatRouter.post('/create', chatController.post_chat_create);
 chatRouter.get('/:chatId', chatController.get_chat);
 chatRouter.post('/:chatId', chatController.post_chat);
 chatRouter.post('/:chatId/edit', chatController.post_edit_chat);
+chatRouter.post('/:chatId/moderate', chatController.post_mod_action);
 chatRouter.ws('/:chatId', chatController.ws_chat_visited);
 
 module.exports = chatRouter;

@@ -81,6 +81,12 @@ fieldset {
   background-color: var(--primary-background-hover);
 }
 
+.primary-btn:disabled,
+.primary-btn:disabled:hover {
+  color: var(--primary-color-hover);
+  background-color: var(--primary-background);
+}
+
 .secondary-btn {
   border: 0;
   background-color: var(--secondary-background);

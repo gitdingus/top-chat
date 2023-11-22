@@ -195,6 +195,34 @@ exports.post_edit_chat = [
   },
 ];
 
+exports.post_mod_action = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  asyncHandler(async (req, res, next) => {
+    const chat = await getChat(req.params.chatId);
+
+    if (!chat.owner._id.equals(req.user._id)) {
+      throw new Error('User not allowed to take mod actions');
+    }
+
+    const userSocket = clients[req.params.chatId].find((ws) => {
+      return ws.username === req.body.username;
+    });
+
+    if (!userSocket) {
+      throw new Error('User socket not found');
+    }
+
+    if (req.body.action === 'kick') {
+      userSocket.close(4003, 'You have been kicked from the chat');
+    } else if (req.body.action === 'ban') {
+      console.log(userSocket);
+    }
+
+    return res.status(200).json({ msg: 'success' });
+  }),
+];
+
 exports.ws_chat_visited = async function (ws, req) {
   const { chatId } = req.params;
   const userJoinedPacket = {};
@@ -215,6 +243,7 @@ exports.ws_chat_visited = async function (ws, req) {
   
   ws.send(JSON.stringify(currentUsersPacket));
 
+  ws.username = req.user.username; // add ability to identify who socket belongs to.
   clients[chatId].push(ws);
   clients[chatId].currentUsers.push(req.user.username);
 

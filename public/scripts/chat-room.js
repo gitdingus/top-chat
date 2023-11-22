@@ -153,9 +153,14 @@ if (messageForm !== null) {
     }
   });
 
-  ws.addEventListener('close', (code, buf) => {
-    messages.appendChild(createAnnouncement('You have been disconnected from the server...'));
-    messages.scrollTo(0, messages.scrollHeight);
+  ws.addEventListener('close', (e) => {
+    if (e.code === 4003) {
+      messages.appendChild(createAnnouncement(e.reason));
+      messages.scrollTo(0, messages.scrollHeight);
+    } else {
+      messages.appendChild(createAnnouncement('You have been disconnected from the server...'));
+      messages.scrollTo(0, messages.scrollHeight);
+    }
     sendBtn.setAttribute('disabled', true);
   })
   
