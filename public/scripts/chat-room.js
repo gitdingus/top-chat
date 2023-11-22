@@ -1,3 +1,5 @@
+import attachPopupListeners from './popup.js';
+
 const messages = document.querySelector('#messages');
 const messageForm = document.querySelector('#message-form');
 const sendBtn = document.querySelector('#send-message');
@@ -6,6 +8,13 @@ const usersList = document.querySelector('#users ul');
 const ownerOptions = document.querySelector('#owner-options');
 const roomSettings = document.querySelector('#room-settings');
 const setTopicForm = document.querySelector('#set-topic');
+const popupParents = document.querySelectorAll('.popup-parent');
+
+if (popupParents.length > 0) {
+  popupParents.forEach((elem) => {
+    attachPopupListeners(elem);
+  });
+}
 
 let autoScroll = true;
 let ws;
@@ -47,7 +56,8 @@ if (messageForm !== null) {
       if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
         currentUsers.forEach((user) => {
           const li = userElements.find((elem) => {
-            return elem.textContent === user;
+            const name = elem.textContent.substring(0, user.length);
+            return name === user;
           });
 
           if (li) {
@@ -81,9 +91,9 @@ if (messageForm !== null) {
       const newUser = packet.data.user;
 
       if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
-
         const li = userElements.find((elem) => {
-          return elem.textContent === newUser;
+          const name = elem.textContent.substring(0, newUser.length);
+          return name === newUser;
         })
 
         if (li) {
@@ -115,7 +125,9 @@ if (messageForm !== null) {
       const userElements = Array.from(usersList.children);
       if (packet.roomType === 'private' || packet.roomType === 'private-message') {        
         userElements.forEach((user) => {
-          if (user.textContent === packet.data.user) {
+          const name = user.textContent.substring(0, packet.data.user.length);
+
+          if (name === packet.data.user) {
             user.classList.remove('online');
           }
         });
@@ -124,7 +136,8 @@ if (messageForm !== null) {
 
       if (packet.roomType === 'public') {
         const i = userElements.findIndex((elem, i) => {
-          return elem.textContent === packet.data.user;
+          const name = elem.textContent.substring(0, packet.data.user.length);
+          return name === packet.data.user;
         })
 
         if (i >= 0) {
@@ -262,6 +275,7 @@ function topicChanged(topic) {
   topicElem.textContent = topic;
 
   messages.appendChild(createAnnouncement(`Topic has changed to: ${topic}`));
+  messages.scrollTo(0, messages.scrollHeight);
 }
 
 function createAnnouncement(text) {
