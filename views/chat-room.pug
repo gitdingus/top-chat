@@ -7,8 +7,10 @@ block styles
   link(rel='stylesheet' href='/styles/modals.css')
 
 block scripts 
-  script(src='/scripts/popup.js' defer)
-  script(src='/scripts/chat-room.js' defer)
+  script(src='/scripts/chat-room.js' type='module' defer)
+  if ((chat.type == 'private' || chat.type == 'public') && chat.owner._id.equals(user._id)) 
+    script(src='/scripts/chat-room-admin.js' type='module' defer)
+  script(src='/scripts/popup.js' type='module' defer)
 
 block content 
   if !user
