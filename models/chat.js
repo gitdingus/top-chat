@@ -15,6 +15,10 @@ const chatSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
+  bannedUsers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User',

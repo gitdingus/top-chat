@@ -1,9 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { getFriends, populateChats } = require('../db/user.js');
+const { findByUsername, getFriends, populateChats } = require('../db/user.js');
 const { 
   addUserToChat,
+  banUserFromChat,
   changeTopic,
   createChat, 
   getChat, 
@@ -44,6 +45,13 @@ exports.get_chat = [
       getMessages(req.params.chatId),
     ]);
 
+    if(chat.bannedUsers) {
+      const bannedUser = chat.bannedUsers.find((doc) => doc._id.equals(req.user._id));
+
+      if (bannedUser) {
+        throw new Error('You have been banned from this chat room');
+      }
+    }
     await populateAllowedUsers(chat);
     
     if (chat.type === 'private-message') {
@@ -216,7 +224,9 @@ exports.post_mod_action = [
     if (req.body.action === 'kick') {
       userSocket.close(4003, 'You have been kicked from the chat');
     } else if (req.body.action === 'ban') {
-      console.log(userSocket);
+      const user = await findByUsername(req.body.username);
+      await banUserFromChat(chat, user);
+      userSocket.close(4003, 'You have been banned from this chatroom');
     }
 
     return res.status(200).json({ msg: 'success' });

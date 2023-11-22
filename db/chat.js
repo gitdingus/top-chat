@@ -20,6 +20,11 @@ async function addUserToChat(chatId, userId) {
     .then(() => session.endSession());
 }
 
+async function banUserFromChat(chat, user) {
+  chat.bannedUsers.addToSet(user._id);
+  await chat.save();
+}
+
 async function changeTopic(user, chatId, topic) {
   const chat = await Chat.findById(chatId);
 
@@ -136,6 +141,7 @@ async function verifyChatPassword(chat, password) {
 
 module.exports = {
   addUserToChat,
+  banUserFromChat,
   changeTopic,
   createChat,
   getAllowedChats,
