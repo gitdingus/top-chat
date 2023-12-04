@@ -21,6 +21,7 @@ async function addUserToChat(chatId, userId) {
 }
 
 async function banUserFromChat(chat, user) {
+  chat.allowedUsers.pull({ _id: user._id});
   chat.bannedUsers.addToSet(user._id);
   await chat.save();
 }
@@ -135,6 +136,21 @@ async function populateAllowedUsers(chat) {
   });
 }
 
+async function populateBannedUsers(chat) {
+  await Chat.populate(chat, {
+    path: 'bannedUsers',
+    select: 'username',
+  });
+}
+
+async function unbanUsers(chat, userIds) {
+  userIds.forEach((id) => {
+    chat.bannedUsers.pull({ _id: new mongoose.Types.ObjectId(id) });
+  });
+
+  await chat.save();
+}
+
 async function verifyChatPassword(chat, password) {
   return verifyPassword(password, chat.salt, chat.hash);
 }
@@ -150,6 +166,8 @@ module.exports = {
   getPublicRooms,
   findPrivateMessages,
   populateAllowedUsers,
+  populateBannedUsers,
   removeUserFromChat,
+  unbanUsers,
   verifyChatPassword,
 }
