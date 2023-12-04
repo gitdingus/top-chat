@@ -11,12 +11,28 @@ const {
   getOwnedRooms, 
   getPublicRooms,
   populateAllowedUsers,
+  populateBannedUsers,
   verifyChatPassword,
 } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
 
 const clients = {};
 
+exports.get_banned_users = [
+  asyncHandler(async (req, res, next) => {
+    const chat = await getChat(req.params.chatId);
+
+    if (req.user._id.equals(chat._id)) {
+      throw new Error('Access denied');
+    }
+
+    await populateBannedUsers(chat);
+
+    res.status(200).json({
+      bannedUsers: chat.bannedUsers,
+    });
+  }),
+]
 exports.get_chat_index = [
   asyncHandler(async (req, res, next) => {
     if (!req.user) {
