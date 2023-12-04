@@ -18,7 +18,16 @@ block content
   else
     if chat.type == 'public' || chat.type == 'private' && user._id.equals(chat.owner._id)
       div#modals 
-        div#room-settings 
+        div#mod-menu-modal
+          div.toolbar 
+            button.exit X 
+          div 
+            h1 Moderation Menu
+            ul 
+              li: button(id="change-topic-button" type="button") Change Topic 
+              li: button(id="view-banned-users-button" type="button") View Banned Users 
+
+        div#change-topic-modal
           div.toolbar 
             button.exit X 
           form#set-topic 
@@ -29,6 +38,16 @@ block content
               input(id='topic' name='topic' type='text')
             div.buttons 
               button(type='submit').primary-btn Set topic 
+
+        div#banned-users-modal 
+          div.toolbar 
+            button.exit X 
+          div 
+            h1 Banned Users List
+            form#unban-users
+              ul#banned-users-list 
+              button#unban-users-button(type='submit') Unban Selected Users
+
     div(class=`chat-info ${chat.type == 'private' || chat.type == 'public' ? 'popup-parent' : ''}`)
       if chat.type == 'private-message'
         p Private message with: #{chat.allowedUsers.find((occupant) => !occupant._id.equals(user._id)).username}
