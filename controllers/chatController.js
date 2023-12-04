@@ -12,6 +12,7 @@ const {
   getPublicRooms,
   populateAllowedUsers,
   populateBannedUsers,
+  unbanUsers,
   verifyChatPassword,
 } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
@@ -224,25 +225,32 @@ exports.post_mod_action = [
   express.urlencoded({ extended: false }),
   asyncHandler(async (req, res, next) => {
     const chat = await getChat(req.params.chatId);
-
+    let userSocket;
     if (!chat.owner._id.equals(req.user._id)) {
-      throw new Error('User not allowed to take mod actions');
+      return res.status(403).json({ msg: 'Forbidden' });
     }
 
-    const userSocket = clients[req.params.chatId].find((ws) => {
-      return ws.username === req.body.username;
-    });
-
-    if (!userSocket) {
-      throw new Error('User socket not found');
+    // find socket associated with username if present
+    if (req.body.username) {
+      userSocket = clients[req.params.chatId].find((ws) => {
+        return ws.username === req.body.username;
+      });
     }
 
-    if (req.body.action === 'kick') {
+    if (req.body.action === 'kick' && userSocket) {
       userSocket.close(4003, 'You have been kicked from the chat');
     } else if (req.body.action === 'ban') {
       const user = await findByUsername(req.body.username);
       await banUserFromChat(chat, user);
-      userSocket.close(4003, 'You have been banned from this chatroom');
+      if (userSocket) {
+        userSocket.close(4003, 'You have been banned from this chatroom');
+      }
+    } else if (req.body.action === 'unban') {
+      if (req.body.users && !Array.isArray(req.body.users)) {
+        req.body.users = [ req.body.users ];
+      }
+
+      await unbanUsers(chat, req.body.users);
     }
 
     return res.status(200).json({ msg: 'success' });
