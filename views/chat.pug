@@ -10,20 +10,6 @@ block content
   if !user
     p Sign up to start chatting! 
   else
-    div.category 
-      div.section-header 
-        h2 Friends
-        button.expand-section(type='button'): img(src='/images/chevron-down.svg' alt='expand friends')
-      div.list
-        if user.friends.length > 0 
-          ul 
-            each entry in user.friends 
-              if entry.status == 'friend'
-                li 
-                  p: a(href=`/chat/${entry.chat}`)= entry.friend.username
-        else
-          p No one has been added to your friends list
-
     div.category
       div.section-header 
         h2 My Rooms
