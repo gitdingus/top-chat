@@ -2,47 +2,89 @@ extends root
 
 block styles 
   link(rel='stylesheet' href='/styles/chat.css')
+  link(rel='stylesheet' href='/styles/create-chat.css')
+  link(rel='stylesheet' href='/styles/forms.css')
 
 block scripts 
   script(src='/scripts/chat.js' defer)
+  script(src='/scripts/create-chat.js' defer)
 
 block content 
   if !user
     p Sign up to start chatting! 
   else
-    div.category
-      div.section-header 
-        h2 My Rooms
-        a(href='/chat/create'): img(src='/images/plus.svg' alt='create chat')
-        button.expand-section(type='button'): img(src='/images/chevron-down.svg' alt='expand friends')
-      div.list
-        if usersChatRooms && usersChatRooms.length > 0
-          ul 
-            each room in usersChatRooms
-              li: a(href=`/chat/${room._id}`)= room.name 
-        else 
-          p You have not created any chat rooms
+    .section-buttons
+      button#public-rooms-btn.section-btn Public Rooms 
+      button#recent-rooms-btn.section-btn Recent Rooms 
+      button#my-rooms-btn.section-btn My Rooms 
+      button#create-chat-btn.section-btn Create Room
 
-    div.category 
-      div.section-header 
-        h2 Recent Chats 
-        button.expand-section(type='button'): img(src='/images/chevron-down.svg' alt='expand recent chats')
-      div.list 
-        if user.chats 
-          ul  
-            each room in user.chats 
-              li: a(href=`/chat/${room._id}`)= room.name 
-        else 
-          p No recent chats 
-
-    div.category      
-      div.section-header 
-        h2 Public Rooms
-        button.expand-section(type='button'): img(src='/images/chevron-down.svg' alt='expand friends')
-      div.list    
+    .sections   
+      #public.section
+        h2 Public Rooms 
         if publicRooms.length > 0
           ul 
             each room in publicRooms 
-              li: a(href=`/chat/${room._id}`)= room.name 
+              li
+                h3: a(href=`/chat/${room._id}`)= room.name
+                p= room.description
         else 
-          p There are no public Rooms
+          p There are no public rooms 
+
+      #recently-visited.section 
+        h2 Recently Visited Rooms 
+        if user.chats && user.chats.length > 0
+          ul
+            each room in user.chats 
+              li
+                h3: a(href=`/chat/${room._id}`)= room.name
+                p= room.description
+        else 
+          p You have not visited any rooms recently
+
+      #my.section 
+        h2 My Rooms 
+        if usersChatRooms && usersChatRooms.length > 0
+          ul 
+            each room in usersChatRooms 
+              li
+                h3: a(href=`/chat/${room._id}`)= room.name
+                p= room.description
+        else 
+          p You have not created any chat rooms
+
+      #create-chat.section
+        h2 Create Chat
+        div#chat-form.form-container.left
+          form(method='post' action='/chat/create')
+            input(type='hidden' name='owner' value=user._id)
+            .form-input-field 
+              label(for='room_name') Name
+              input(id='room_name' name='room_name' type='text' value=chat ? chat.room_name : '')
+              if errors && errors.room_name 
+                p= errors.room_name.msg
+            .form-input-field 
+              label(for='description') Description
+              textarea(id='description' name='description')= chat ? chat.description : ''
+              if errors && errors.description 
+                p= errors.description.msg
+            .form-select-field
+              label(for='room-type') Room Type
+              select(id='room-type' name='room_type')
+                - 
+                  let showPrivate = true;
+                  if (chat && chat.room_type == 'public')
+                    showPrivate = false;
+
+                option(value='private' selected=(showPrivate == true) ? true : false) Private 
+                option(value='public' selected=(showPrivate == true) ? false : true) Public
+            if (errors && errors.room_type)
+              p= errors.room_type.msg
+            div(id='create-password-div')
+              .form-input-field
+                label(for='password-input') Password 
+                input(id='password-input' name='password' type='text')
+                if (errors && errors.password)
+                  p= errors.password.msg
+            .buttons
+              button(type='submit').primary-btn Create Chat

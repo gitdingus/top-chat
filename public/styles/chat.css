@@ -1,44 +1,35 @@
-.section-header {
-  display: flex;
-  align-items: center;
+.section-buttons {
+  --primary-background: #cbd5e1;
+  --secondary-background: transparent;
+  --primary-background-active: #94a3b8;
+  --primary-color: #334155;
+  --primary-color-active: #e2e8f0;
 }
-.section-header button,
-.section-header a {
-  background: transparent;
-  border: none;
+
+.section-buttons a {
+  text-decoration: none;
+}
+.section-buttons button,
+.section-buttons a {
+  background-color: var(--primary-background);
+  color: var(--primary-color);
+  border: 0;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-right: 1rem;
+  margin-left: 0;
+  font-size: 1rem;
   cursor: pointer;
-  transition: transform 200ms 0ms ease-in-out;
 }
 
-.section-header a img,
-.section-header button img {
-  height: 25px;
-  width: 25px;
+button.active {
+  background-color: var(--primary-background-active);
 }
 
-.section-header button:hover,
-.section-header a img:hover {
-  transform: scale(1.2);
+.section {
+  display: none;
 }
 
-.category .list {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 200ms 0ms ease-in-out;
-}
-
-.category.expanded .list {
-  grid-template-rows: 1fr;
-}
-
-.category .list > * {
-  overflow: hidden;
-}
-
-.category .section-header button img{
-  content: url('/images/chevron-down.svg');
-}
-
-.category.expanded .section-header button img{
-  content: url('/images/minus.svg');
+.section.active {
+  display: block;
 }
