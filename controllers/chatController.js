@@ -39,8 +39,7 @@ exports.get_chat_index = [
     if (!req.user) {
       throw new Error('not logged in');
     }
-    const [ populateFriends, ownedRooms, publicRooms ] = await Promise.all([
-      getFriends(req.user),
+    const [ ownedRooms, publicRooms ] = await Promise.all([
       getOwnedRooms(req.user._id),
       getPublicRooms(),
       populateChats(req.user),
