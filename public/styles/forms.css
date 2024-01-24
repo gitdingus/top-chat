@@ -60,6 +60,16 @@ fieldset {
   margin: 10px;
 }
 
+.form-select-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-select-field select {
+  flex: 1;
+}
+
 .buttons{
   display: flex;
   justify-content: flex-end;
