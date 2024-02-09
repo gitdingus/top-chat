@@ -7,6 +7,9 @@ mixin inputfield(id, fieldtype, text, initialValue)
     if error && error[id] && error[id].msg 
       p= error[id].msg 
 
+block scripts 
+  script(src='/scripts/profile-pic-upload.js' defer)
+
 block styles 
   link(rel='stylesheet' href='/styles/forms.css')
 
@@ -36,5 +39,19 @@ block content
             input(id='show_online_status' name='show_online_status' type='checkbox' checked=user.showOnlineStatus || false)
         div.buttons
           button(type='submit' class='primary-btn') Update profile
+    div.form-container.left 
+      form#upload-image-form
+        div.form-title Upload Profile Picture 
+        fieldset 
+          legend Profile Picture 
+          div#current-profile-image 
+            p Current Profile Image
+            img(src=`${user.image || '/images/account.png'}` alt='current profile picture')
+          div.form-file-field 
+            label(for='new-profile-pic') File 
+            input#new-profile-pic(type='file' accept='image/*' name='profile-pic')
+          div#preview-image 
+          div.buttons 
+            button(type='submit' class='primary-btn') Upload image
   else 
     p User not found

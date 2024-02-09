@@ -60,14 +60,20 @@ fieldset {
   margin: 10px;
 }
 
-.form-select-field {
+.form-select-field,
+.form-file-field {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.form-select-field select {
+.form-select-field select,
+.form-file-field input {
   flex: 1;
+}
+
+.form-file-field input {
+  box-shadow: none;
 }
 
 .buttons{
