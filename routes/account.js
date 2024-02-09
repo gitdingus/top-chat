@@ -16,6 +16,7 @@ accountRouter.get('/friends', accountsController.get_friends);
 accountRouter.get('/me', accountsController.get_my_profile);
 accountRouter.get('/me/edit', accountsController.get_edit_profile);
 accountRouter.post('/me/edit', accountsController.post_edit_profile);
+accountRouter.post('/me/edit/profile-image', accountsController.post_profile_image);
 accountRouter.post('/me/acceptfriend', accountsController.post_accept_friend);
 accountRouter.post('/me/addfriend', accountsController.post_add_friend);
 accountRouter.post('/me/rejectfriend', accountsController.post_reject_friend);

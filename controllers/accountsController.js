@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const express = require('express');
+const multer = require('multer');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
-
 const { 
   acceptFriend,
   addFriend,
@@ -13,7 +13,22 @@ const {
   rejectFriend,
   updateUser,
 } = require('../db/user.js');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getStorage, getDownloadURL } = require('firebase-admin/storage');
 const User = require('../models/user.js');
+
+// config multer
+const upload = multer({ storage: multer.memoryStorage() });
+
+// config firebase
+const serviceAccount = require('../../image-store-credentials/image-store-e09d9-firebase-adminsdk-r3avv-65cab44ecc.json');
+
+initializeApp({
+  credential: cert(serviceAccount),
+  storageBucket: 'image-store-e09d9.appspot.com',
+});
+
+const fsBucket = getStorage().bucket();
 
 exports.get_create_account = (req, res, next) => {
   return res.render('create-account');
@@ -285,6 +300,48 @@ exports.post_logout = [
   
       res.redirect('/');
     });
+  }),
+];
+
+exports.post_profile_image = [
+  upload.single('profile-pic'),
+  asyncHandler(async (req, res, next) => {
+
+    if (!req.file) {
+      res.status(400).json({ msg: 'No profile picture uploaded' });
+      return;
+    }
+
+    if (req.user.image) {
+      // cleanup users old profile pic
+      const currentPicUrl = new URL(req.user.image);
+      const pathname = currentPicUrl.pathname;
+      const currentPicFilename = decodeURIComponent(pathname.substring(pathname.lastIndexOf('/') + 1));
+      const currentProfilePic = fsBucket.file(currentPicFilename);
+
+      await currentProfilePic.delete();
+    }
+
+    const extension = req.file.originalname.substring(req.file.originalname.lastIndexOf('.'));
+    const newFilename = `/top-chat/${req.user.username}-profile-pic${extension}`;
+    const imageFile = fsBucket.file(newFilename);
+
+    imageFile.save(req.file.buffer)
+      .then(async() => {
+        const downloadURL = await getDownloadURL(imageFile);
+        const updateObj = {
+          image: downloadURL,
+        };
+
+        await updateUser(req.user, updateObj);
+        res.status(200).json({ msg: 'success' });
+        return;
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ msg: 'upload failed' });
+        return;
+      });
   }),
 ];
 
