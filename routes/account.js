@@ -12,6 +12,7 @@ accountRouter.get('/create-account', accountsController.get_create_account);
 accountRouter.get('/login', accountsController.get_login);
 accountRouter.post('/logout', accountsController.post_logout);
 
+accountRouter.delete('/me/edit/profile-image', accountsController.delete_profile_image);
 accountRouter.get('/friends', accountsController.get_friends);
 accountRouter.get('/me', accountsController.get_my_profile);
 accountRouter.get('/me/edit', accountsController.get_edit_profile);

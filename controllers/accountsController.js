@@ -30,6 +30,35 @@ initializeApp({
 
 const fsBucket = getStorage().bucket();
 
+exports.delete_profile_image = [
+  express.json(),
+  express.urlencoded({ extended: false }),
+  asyncHandler(async (req, res, next) => {
+
+    if (!req.user.image) {
+      res.status(404).json({ msg: 'Profile image not found'});
+      return;
+    }
+
+    const imageUrl = new URL(req.user.image);
+    const pathname = decodeURIComponent(imageUrl.pathname);
+    const imageFilename = `/top-chat/${pathname.substring(pathname.lastIndexOf('/') + 1)}`;
+
+    fsBucket.file(imageFilename).delete()
+      .then(async () => {
+        await updateUser(req.user, { image: '' });
+        res.status(200).json({ msg: 'Profile image deleted successfully' });
+        return;
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ msg: 'Could not delete profile image' });
+        return;
+      });
+
+  }),
+];
+
 exports.get_create_account = (req, res, next) => {
   return res.render('create-account');
 };
