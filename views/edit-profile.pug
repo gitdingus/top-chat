@@ -9,6 +9,7 @@ mixin inputfield(id, fieldtype, text, initialValue)
 
 block scripts 
   script(src='/scripts/profile-pic-upload.js' defer)
+  script(src='/scripts/delete-profile-pic-form.js' defer)
 
 block styles 
   link(rel='stylesheet' href='/styles/forms.css')
@@ -53,5 +54,15 @@ block content
           div#preview-image 
           div.buttons 
             button(type='submit' class='primary-btn') Upload image
+    div.form-container.left
+      form#delete-image-form
+        div.form-title Remove Profile Picture
+        fieldset
+          legend Delete Profile Picture
+          div.form-check-field 
+            label(for='delete-profile-image') Check to Delete Profile Image 
+            input#delete-profile-image(type='checkbox' name='delete-profile-image' value='delete')
+          div.buttons.hidden-submit 
+            button(type='submit' class='primary-btn') Confirm delete 
   else 
     p User not found
