@@ -8,6 +8,7 @@ block styles
 block scripts 
   script(src='/scripts/chat.js' defer)
   script(src='/scripts/create-chat.js' defer)
+  script(src='/scripts/join-private-room.js' defer)
 
 block content 
   if !user
@@ -17,6 +18,7 @@ block content
       button#public-rooms-btn.section-btn Public Rooms 
       button#recent-rooms-btn.section-btn Recent Rooms 
       button#my-rooms-btn.section-btn My Rooms 
+      button#private-rooms-btn.section-btn Private Rooms
       button#create-chat-btn.section-btn Create Room
 
     .sections   
@@ -52,7 +54,18 @@ block content
                 p= room.description
         else 
           p You have not created any chat rooms
-
+      #private-rooms.section 
+        h2 Private Rooms 
+        div.form-container.left
+          form#join-private-room(method='post')
+            .form-input-field
+              label(for='room-id') Room Id: 
+              input#room-id(type='text' name='chatId')
+            .form-input-field
+              label(for='room-password') Password:
+              input#room-password(type='password' name='chatPassword')
+            .buttons
+              button#join-room-btn.primary-btn(type='submit') Join Room
       #create-chat.section
         h2 Create Chat
         div#chat-form.form-container.left
