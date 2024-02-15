@@ -22,11 +22,9 @@ uploadImageForm.addEventListener('submit', (e) => {
     body: form,
   })
     .then((res) => {
-      console.log(res.status);
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
+      if (res.status === 200) {
+        window.location.reload();
+      }
     });
   return false;
 });
