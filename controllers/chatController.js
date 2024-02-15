@@ -13,6 +13,7 @@ const {
   populateAllowedUsers,
   populateBannedUsers,
   unbanUsers,
+  userAllowedInChat,
   verifyChatPassword,
 } = require('../db/chat.js');
 const { createMessage, getMessages, populateUsers } = require('../db/message.js');
@@ -112,6 +113,19 @@ exports.post_chat = [
   asyncHandler(async (req, res, next) => {
     const chat = await getChat(req.body.chatId);
     const correctPassword = await verifyChatPassword(chat, req.body.chatPassword);
+
+    if (userAllowedInChat(chat, req.user)) {
+      const [ messages, populateUsersVoid ]  = await Promise.all([
+        getMessages(chat._id),
+        populateAllowedUsers(chat),
+      ]);
+
+      return res.render('chat-room', {
+        user: req.user,
+        chat,
+        messages,
+      });
+    }
 
     if (!correctPassword) {
       return res.render('chat-room-login', {
