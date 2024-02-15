@@ -151,6 +151,29 @@ async function unbanUsers(chat, userIds) {
   await chat.save();
 }
 
+function userAllowedInChat(chat, user) {
+  if (chat.type === 'public' 
+    && !chat.bannedUsers.includes(user._id)
+  ) {
+    return true;
+  }
+
+  if (chat.type === 'private' 
+    && chat.allowedUsers.includes(user._id) 
+    && !chat.bannedUsers.includes(user._id)
+    ) {
+    return true;
+  }
+
+  if (chat.type === 'private-message'
+    && chat.allowedUsers.includes(user._id)
+  ){
+    return true;
+  }
+
+  return false;
+}
+
 async function verifyChatPassword(chat, password) {
   return verifyPassword(password, chat.salt, chat.hash);
 }
@@ -169,5 +192,6 @@ module.exports = {
   populateBannedUsers,
   removeUserFromChat,
   unbanUsers,
+  userAllowedInChat,
   verifyChatPassword,
 }
