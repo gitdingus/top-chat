@@ -9,6 +9,7 @@ const {
   createAccount,
   findByUsername, 
   getFriends,
+  getPublicProfiles,
   locateUsers,
   rejectFriend,
   updateUser,
@@ -98,12 +99,16 @@ exports.get_friends = [
     });
   }),
 ];
+
 exports.get_locate_users = [
-  (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
+    const publicProfiles = await getPublicProfiles();
+
     return res.render('locate-users', {
       user: req.user,
+      users: publicProfiles,
     });
-  }
+  }),
 ];
 
 exports.get_my_profile = (req, res, next) => {

@@ -148,6 +148,12 @@ async function getFriends(user) {
   });
 }
 
+async function getPublicProfiles() {
+  const users = await User.find({ public: true }).exec();
+
+  return users;
+}
+
 async function locateUsers(data) {
   const users = await User.find({ $or: [{ username: data }, { email: data }]}).exec();
 
@@ -227,6 +233,7 @@ module.exports = {
   findById,
   findByUsername,
   getFriends,
+  getPublicProfiles,
   locateUsers,
   populateChats,
   rejectFriend,
