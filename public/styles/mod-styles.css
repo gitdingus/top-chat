@@ -1,0 +1,27 @@
+#mod-menu-modal ul {
+  list-style: none;
+  padding: 0;
+}
+
+#mod-menu-modal li {
+  margin: 10px;
+
+}
+
+#mod-menu-modal li button {
+  color: #334155;
+  background-color: #cbd5e1;
+  padding: 8px 25px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 1px 1px 2px black;
+}
+
+#users .popup ul {
+  list-style: none;
+  padding: 0;
+}
+
+#users .popup li {
+  margin: 10px;
+}

@@ -5,6 +5,8 @@ block styles
   link(rel='stylesheet' href='/styles/forms.css')
   link(rel='stylesheet' href='/styles/popup.css')
   link(rel='stylesheet' href='/styles/modals.css')
+  if ((chat.type == 'private' || chat.type == 'public') && chat.owner._id.equals(user._id))
+    link(rel='stylesheet' href='/styles/mod-styles.css')
 
 block scripts 
   script(src='/scripts/chat-room.js' type='module' defer)
@@ -46,7 +48,7 @@ block content
             h1 Banned Users List
             form#unban-users
               ul#banned-users-list 
-              button#unban-users-button(type='submit') Unban Selected Users
+              button#unban-users-button.primary-btn(type='submit') Unban Selected Users
 
     div(class=`chat-info ${chat.type == 'private' || chat.type == 'public' ? 'popup-parent' : ''}`)
       if chat.type == 'private-message'
