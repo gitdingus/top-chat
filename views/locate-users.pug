@@ -3,6 +3,7 @@ extends root
 
 block styles
   link(rel='stylesheet' href='/styles/locate-users.css')
+  link(rel='stylesheet' href='/styles/profile-images.css')
 
 
 block content 
@@ -19,8 +20,10 @@ block content
           each foundUser in users 
             div.user 
               a(href=foundUser.url)
-                img(src=foundUser.image || '/images/account.png')
-                p #{foundUser.username}
+                div
+                  div.image
+                    img.profile-image(src=foundUser.image || '/images/account.png')
+                  p #{foundUser.username}
       else 
         p No users found
   else 

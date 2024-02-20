@@ -8,6 +8,7 @@ block scripts
 block styles 
   link(rel='stylesheet' href='/styles/friends.css')
   link(rel='stylesheet' href='/styles/forms.css')
+  link(rel='stylesheet' href='/styles/profile-images.css')
 
 
 block content 
@@ -22,7 +23,8 @@ block content
     div.friends 
       each entry in user.friends 
         div.friend 
-          img(src=entry.friend.image || '/images/account.png')
+          div.image 
+            img.profile-image(src=entry.friend.image || '/images/account.png')
           div.user-name
             - 
               let onlineStatus = '';

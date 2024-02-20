@@ -10,6 +10,7 @@ block scripts
 block styles 
   link(rel='stylesheet' href='/styles/user-profile.css')
   link(rel='stylesheet' href='/styles/forms.css')
+  link(rel='stylesheet' href='/styles/profile-images.css')
 
   
 block content 
@@ -24,7 +25,7 @@ block content
       h1(class=`${onlineStatus}`) Profile for #{profile.username}
     if profile.public
       div.avatar
-        img(src=profile.image || '/images/account.png')
+        img.profile-image(src=profile.image || '/images/account.png')
         p Joined #{profile.created.toLocaleDateString()}
       div.user-info
         if profile.firstName || profile.lastName

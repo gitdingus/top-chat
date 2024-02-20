@@ -10,6 +10,13 @@
   align-items: center;
 }
 
+.image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .user-name p {
   text-align: center;
   position: relative;

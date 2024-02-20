@@ -60,6 +60,7 @@
   flex-wrap: wrap;
   margin-top: 3rem;
 }
+
 .user {
   padding: 1rem;
   border-radius: 16px;
@@ -75,9 +76,19 @@
 }
 
 .user a { 
-  text-decoration: none;
+  text-decoration: none
+}
+
+.user a div {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.user a .image {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
